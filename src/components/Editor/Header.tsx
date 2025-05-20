@@ -35,12 +35,15 @@ const Header: React.FC<HeaderProps> = ({ onSave, onSend }) => {
 
   return (
     <div className="border-b border-border py-4 px-6 flex justify-between items-center bg-white">
-      <div className="flex items-center">
-        <Link to="/" className="mr-4">
+      <div className="flex items-center gap-3">
+        <Link to="/" className="mr-2">
           <Button variant="ghost" size="sm" className="gap-2">
             <ArrowLeft size={16} /> Back
           </Button>
         </Link>
+        <div className="w-8 h-8 bg-editor-purple rounded-md flex items-center justify-center">
+          <span className="text-white font-bold text-sm">SM</span>
+        </div>
         <h1 className="text-lg font-medium text-editor-purple">Email Template Editor</h1>
       </div>
       <div className="flex items-center gap-2">
