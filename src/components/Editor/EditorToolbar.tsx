@@ -14,6 +14,14 @@ import {
   ImagePlus, 
   Palette 
 } from "lucide-react";
+import { 
+  Menubar, 
+  MenubarContent, 
+  MenubarItem, 
+  MenubarMenu, 
+  MenubarSeparator, 
+  MenubarTrigger 
+} from "@/components/ui/menubar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +33,7 @@ interface EditorToolbarProps {
   onAlign: (align: string) => void;
   onLink: () => void;
   onImage: () => void;
-  onColor: () => void;
+  onColor: (color: string) => void;
   activeFormats: {
     bold: boolean;
     italic: boolean;
@@ -46,6 +54,18 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onColor,
   activeFormats,
 }) => {
+  const colorOptions = [
+    { name: "Red", value: "#ef4444" },
+    { name: "Blue", value: "#3b82f6" },
+    { name: "Green", value: "#10b981" },
+    { name: "Purple", value: "#8b5cf6" },
+    { name: "Pink", value: "#ec4899" },
+    { name: "Orange", value: "#f97316" },
+    { name: "Teal", value: "#14b8a6" },
+    { name: "Gray", value: "#6b7280" },
+    { name: "Black", value: "#000000" },
+  ];
+
   return (
     <TooltipProvider>
       <div className="flex flex-wrap items-center gap-1 p-2 border rounded-t-md bg-white shadow-sm">
@@ -75,13 +95,25 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
         <div className="h-6 w-px bg-gray-200 mx-1"></div>
 
-        <ToolbarButton 
-          tooltip="Heading" 
-          active={activeFormats.heading !== null} 
-          onClick={() => onHeading(1)}
-        >
-          <Heading size={18} />
-        </ToolbarButton>
+        <Menubar className="border-none p-0 h-auto bg-transparent">
+          <MenubarMenu>
+            <MenubarTrigger className={cn(
+              "p-0 h-8 w-8 flex items-center justify-center", 
+              activeFormats.heading !== null && "bg-editor-soft-purple text-editor-dark-purple"
+            )}>
+              <Heading size={18} />
+            </MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem onClick={() => onHeading(1)}>Heading 1</MenubarItem>
+              <MenubarItem onClick={() => onHeading(2)}>Heading 2</MenubarItem>
+              <MenubarItem onClick={() => onHeading(3)}>Heading 3</MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem onClick={() => document.execCommand("formatBlock", false, "<p>")}>
+                Normal Text
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
 
         <div className="h-6 w-px bg-gray-200 mx-1"></div>
 
@@ -129,9 +161,26 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
         <div className="h-6 w-px bg-gray-200 mx-1"></div>
 
-        <ToolbarButton tooltip="Text Color" onClick={onColor}>
-          <Palette size={18} />
-        </ToolbarButton>
+        <Menubar className="border-none p-0 h-auto bg-transparent">
+          <MenubarMenu>
+            <MenubarTrigger className="p-0 h-8 w-8 flex items-center justify-center">
+              <Palette size={18} />
+            </MenubarTrigger>
+            <MenubarContent>
+              <div className="grid grid-cols-3 gap-1 p-1">
+                {colorOptions.map((color) => (
+                  <div
+                    key={color.value}
+                    className="h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
+                    style={{ backgroundColor: color.value }}
+                    onClick={() => onColor(color.value)}
+                    title={color.name}
+                  />
+                ))}
+              </div>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
       </div>
     </TooltipProvider>
   );

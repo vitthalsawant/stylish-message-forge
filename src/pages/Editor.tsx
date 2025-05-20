@@ -6,12 +6,14 @@ import EditorContent from "@/components/Editor/EditorContent";
 import ImageUploader from "@/components/Editor/ImageUploader";
 import LinkEditor from "@/components/Editor/LinkEditor";
 import Footer from "@/components/Editor/Footer";
+import Header from "@/components/Editor/Header";
+import TemplateSelector from "@/components/Editor/TemplateSelector";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Copy, Eye } from "lucide-react";
+import { Copy, Eye } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Editor = () => {
@@ -22,6 +24,8 @@ const Editor = () => {
   const [showLinkEditor, setShowLinkEditor] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [activeTab, setActiveTab] = useState("edit");
+  const [subject, setSubject] = useState("");
+  const [showTemplateSelector, setShowTemplateSelector] = useState(true);
   const previewRef = useRef<HTMLDivElement>(null);
   
   const [activeFormats, setActiveFormats] = useState({
@@ -174,18 +178,35 @@ const Editor = () => {
     setShowPreview(true);
   };
 
+  const handleSelectTemplate = (template: any) => {
+    setContent(template.content);
+    setShowTemplateSelector(false);
+    toast({
+      title: "Template Selected",
+      description: `Template "${template.name}" has been loaded.`,
+    });
+  };
+
+  const handleNewTemplate = () => {
+    setShowTemplateSelector(true);
+  };
+
   return (
-    <div className="container py-8">
-      <div className="flex justify-between items-center mb-6">
-        <Link to="/" className="flex items-center">
-          <Button variant="ghost" className="gap-2">
-            <ArrowLeft size={16} /> Back to Home
-          </Button>
-        </Link>
-        <div className="flex gap-2">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header onSend={handleSend} />
+      
+      <div className="container py-6 flex-grow">
+        <div className="flex justify-end mb-4">
           <Button 
             variant="outline" 
-            className="flex items-center gap-2"
+            className="mr-2"
+            onClick={handleNewTemplate}
+          >
+            Change Template
+          </Button>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2 mr-2"
             onClick={handleCopyContent}
           >
             <Copy size={16} /> Copy Content
@@ -198,109 +219,99 @@ const Editor = () => {
             <Eye size={16} /> Preview
           </Button>
         </div>
-      </div>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-editor-purple">
-            Email/Text Editor
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-4">
-              <TabsTrigger value="edit">Edit</TabsTrigger>
-              <TabsTrigger value="preview">Preview</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="edit" className="space-y-4">
-              <div className="mb-6">
-                <label className="block mb-2 text-sm font-medium">Subject</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
-                  placeholder="Enter subject"
-                />
-              </div>
-
-              <div className="bg-white rounded-md shadow-sm">
-                <EditorToolbar
-                  onBold={handleBold}
-                  onItalic={handleItalic}
-                  onUnderline={handleUnderline}
-                  onHeading={handleHeading}
-                  onAlign={handleAlign}
-                  onLink={handleLink}
-                  onImage={handleImage}
-                  onColor={() => {}} // Handled by popover
-                  activeFormats={activeFormats}
-                />
+        {showTemplateSelector ? (
+          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+        ) : (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-center text-editor-purple">
+                Email/Text Editor
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="edit">Edit</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
+                </TabsList>
                 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-8 w-8 p-0 absolute right-24 top-[273px] z-10"
-                    >
-                      <span className="sr-only">Color picker</span>
-                      <span className="h-4 w-4 rounded-full bg-editor-purple" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-3">
-                    <div className="flex flex-wrap gap-2 max-w-[220px]">
-                      {colorOptions.map((color) => (
-                        <div
-                          key={color.value}
-                          className="h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
-                          style={{ backgroundColor: color.value }}
-                          onClick={() => handleColor(color.value)}
-                          title={color.name}
-                        />
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-                
-                <EditorContent
-                  content={content}
-                  onChange={setContent}
-                  onSelectionChange={setSelection}
-                />
-              </div>
-
-              <Footer content={footerContent} onChange={setFooterContent} />
-            </TabsContent>
-            
-            <TabsContent value="preview">
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="preview-container border rounded-lg p-6 bg-white">
-                    <div 
-                      className="content-preview mb-8"
-                      dangerouslySetInnerHTML={{ __html: content }}
-                    />
-                    <hr className="my-6" />
-                    <div 
-                      className="footer-preview text-sm text-gray-600"
-                      dangerouslySetInnerHTML={{ __html: footerContent }}
+                <TabsContent value="edit" className="space-y-4">
+                  <div className="mb-6">
+                    <label className="block mb-2 text-sm font-medium">Subject</label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                      placeholder="Enter subject"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
                     />
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
 
-          <div className="mt-6 flex justify-end">
-            <Button 
-              className="bg-editor-purple hover:bg-editor-dark-purple" 
-              onClick={handleSend}
-            >
-              Send Message
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+                  <div className="bg-white rounded-md shadow-sm">
+                    <EditorToolbar
+                      onBold={handleBold}
+                      onItalic={handleItalic}
+                      onUnderline={handleUnderline}
+                      onHeading={handleHeading}
+                      onAlign={handleAlign}
+                      onLink={handleLink}
+                      onImage={handleImage}
+                      onColor={handleColor}
+                      activeFormats={activeFormats}
+                    />
+                    
+                    <Popover>
+                      <PopoverContent className="w-auto p-3">
+                        <div className="flex flex-wrap gap-2 max-w-[220px]">
+                          {colorOptions.map((color) => (
+                            <div
+                              key={color.value}
+                              className="h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ backgroundColor: color.value }}
+                              onClick={() => handleColor(color.value)}
+                              title={color.name}
+                            />
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                    
+                    <EditorContent
+                      content={content}
+                      onChange={setContent}
+                      onSelectionChange={setSelection}
+                    />
+                  </div>
+
+                  <Footer content={footerContent} onChange={setFooterContent} />
+                </TabsContent>
+                
+                <TabsContent value="preview">
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="preview-container border rounded-lg p-6 bg-white">
+                        <div className="preview-subject mb-4">
+                          <h3 className="text-lg font-medium">Subject: {subject}</h3>
+                        </div>
+                        <div 
+                          className="content-preview mb-8"
+                          dangerouslySetInnerHTML={{ __html: content }}
+                        />
+                        <hr className="my-6" />
+                        <div 
+                          className="footer-preview text-sm text-gray-600"
+                          dangerouslySetInnerHTML={{ __html: footerContent }}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       {/* Modals */}
       <ImageUploader
@@ -322,6 +333,9 @@ const Editor = () => {
             <DialogTitle>Message Preview</DialogTitle>
           </DialogHeader>
           <div className="preview-container p-6 bg-white border rounded-lg">
+            <div className="preview-subject mb-4">
+              <h3 className="text-lg font-medium">Subject: {subject}</h3>
+            </div>
             <div
               ref={previewRef}
               className="content-preview mb-8"
