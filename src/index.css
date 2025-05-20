@@ -52,6 +52,9 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    --editor-purple: 255 70% 74%;
+    --editor-dark-purple: 255 70% 64%;
   }
 
   .dark {
@@ -129,6 +132,30 @@
   }
 
   .editor-content img {
+    @apply max-w-full h-auto my-4 rounded-md;
+  }
+  
+  .preview-container .content-preview h1 {
+    @apply text-3xl font-bold mb-4;
+  }
+
+  .preview-container .content-preview h2 {
+    @apply text-2xl font-bold mb-3;
+  }
+
+  .preview-container .content-preview h3 {
+    @apply text-xl font-bold mb-2;
+  }
+
+  .preview-container .content-preview p {
+    @apply mb-4;
+  }
+
+  .preview-container .content-preview a {
+    @apply text-primary underline;
+  }
+
+  .preview-container .content-preview img {
     @apply max-w-full h-auto my-4 rounded-md;
   }
 }

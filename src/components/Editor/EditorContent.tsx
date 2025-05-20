@@ -13,6 +13,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
   onSelectionChange 
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const handleSelection = () => {
@@ -42,10 +43,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
 
   // Initialize editor with content
   useEffect(() => {
-    if (editorRef.current && !editorRef.current.innerHTML) {
+    if (editorRef.current && !isInitialized) {
       editorRef.current.innerHTML = content;
+      setIsInitialized(true);
+    } else if (editorRef.current && isInitialized && editorRef.current.innerHTML !== content) {
+      // Only update if content changed from outside the editor
+      const activeElement = document.activeElement;
+      if (activeElement !== editorRef.current) {
+        editorRef.current.innerHTML = content;
+      }
     }
-  }, [content]);
+  }, [content, isInitialized]);
 
   return (
     <div
