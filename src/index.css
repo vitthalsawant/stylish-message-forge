@@ -91,6 +91,7 @@
 .editor-content .draggable-row > div {
   position: relative;
   min-height: 30px;
+  cursor: move;
 }
 
 .editor-content .draggable-row:hover {
@@ -144,6 +145,16 @@
   font-weight: bold;
   text-align: center;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Content blocks styles */
+.content-block {
+  transition: all 0.2s ease-in-out;
+}
+
+.content-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* Template color themes */

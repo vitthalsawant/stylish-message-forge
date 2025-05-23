@@ -82,7 +82,9 @@ const EditorContent: React.FC<EditorContentProps> = ({
         
         row.addEventListener('dragend', () => {
           setDraggedElement(null);
-          row.classList.remove('dragging');
+          if (row instanceof HTMLElement) {
+            row.classList.remove('dragging');
+          }
         });
       });
       
@@ -107,7 +109,9 @@ const EditorContent: React.FC<EditorContentProps> = ({
         
         column.addEventListener('dragend', () => {
           setDraggedElement(null);
-          column.classList.remove('dragging');
+          if (column instanceof HTMLElement) {
+            column.classList.remove('dragging');
+          }
         });
       });
     };
@@ -132,7 +136,9 @@ const EditorContent: React.FC<EditorContentProps> = ({
     const handleDragLeave = (e: DragEvent) => {
       const target = e.target as HTMLElement;
       const dropTarget = target.closest('.draggable-row') as HTMLElement | null || target;
-      dropTarget?.classList.remove('drag-over');
+      if (dropTarget) {
+        dropTarget.classList.remove('drag-over');
+      }
     };
 
     const handleDrop = (e: DragEvent) => {
@@ -220,6 +226,31 @@ const EditorContent: React.FC<EditorContentProps> = ({
             setupDraggableElements(); // Setup new draggable rows
           };
           reader.readAsDataURL(file);
+        }
+      } else {
+        // Check for HTML data being dropped from content blocks
+        const html = e.dataTransfer?.getData('text/html');
+        if (html) {
+          const target = e.target as HTMLElement;
+          const dropTarget = target.closest('.draggable-row') || editor;
+          
+          // Create a temporary container to hold our HTML
+          const tempContainer = document.createElement('div');
+          tempContainer.innerHTML = html;
+          
+          // Get the first element from our HTML snippet
+          const element = tempContainer.firstElementChild;
+          if (element) {
+            if (dropTarget === editor) {
+              editor.appendChild(element);
+            } else if (dropTarget.classList.contains('draggable-row')) {
+              dropTarget.insertAdjacentElement('beforebegin', element);
+            }
+            
+            // Update content and initialize draggable behavior
+            handleInput({ currentTarget: editor } as React.FormEvent<HTMLDivElement>);
+            setupDraggableElements();
+          }
         }
       }
     };

@@ -3,11 +3,12 @@ import React from 'react';
 import { 
   Type, 
   AlignLeft, 
+  List as ListIcon, 
   Image as ImageIcon, 
   Square, 
+  Table2, 
   SeparatorHorizontal, 
-  Table as TableIcon,
-  Space,
+  Minus,
   Share2,
   Code,
   Film,
@@ -25,13 +26,13 @@ interface ContentBlockProps {
 const ContentBlock: React.FC<ContentBlockProps> = ({ title, icon, onClick }) => {
   return (
     <div 
-      className="flex flex-col items-center p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
+      className="flex flex-col items-center justify-center p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
       onClick={onClick}
     >
       <div className="mb-2 text-gray-600">
         {icon}
       </div>
-      <span className="text-xs text-center">{title}</span>
+      <span className="text-xs text-center font-medium">{title}</span>
     </div>
   );
 };
@@ -44,12 +45,12 @@ const ContentBlocks: React.FC<ContentBlocksProps> = ({ onInsertContent }) => {
   const blocks = [
     { title: 'TITLE', icon: <Type size={24} />, type: 'title' },
     { title: 'PARAGRAPH', icon: <AlignLeft size={24} />, type: 'paragraph' },
-    { title: 'LIST', icon: <AlignLeft size={24} />, type: 'list' },
+    { title: 'LIST', icon: <ListIcon size={24} />, type: 'list' },
     { title: 'IMAGE', icon: <ImageIcon size={24} />, type: 'image' },
     { title: 'BUTTON', icon: <Square size={24} />, type: 'button' },
-    { title: 'TABLE', icon: <TableIcon size={24} />, type: 'table' },
+    { title: 'TABLE', icon: <Table2 size={24} />, type: 'table' },
     { title: 'DIVIDER', icon: <SeparatorHorizontal size={24} />, type: 'divider' },
-    { title: 'SPACER', icon: <Space size={24} />, type: 'spacer' },
+    { title: 'SPACER', icon: <Minus size={24} />, type: 'spacer' },
     { title: 'SOCIAL', icon: <Share2 size={24} />, type: 'social' },
     { title: 'HTML', icon: <Code size={24} />, type: 'html' },
     { title: 'VIDEO', icon: <Film size={24} />, type: 'video' },

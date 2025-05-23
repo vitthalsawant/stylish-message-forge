@@ -26,7 +26,7 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout, onDragL
       template: (
         <div className="h-24 border border-dashed border-gray-300 rounded-sm bg-gray-100 w-full"></div>
       ),
-      html: '<div class="draggable-row" style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>Single column content area. Click to edit.</p></div>'
+      html: '<div class="draggable-row" style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><div contenteditable="true"><p>Single column content area. Click to edit.</p></div></div>'
     },
     {
       id: 'two-column-left',
