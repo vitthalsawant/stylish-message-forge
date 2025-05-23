@@ -37,7 +37,7 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout, onDragL
           <div className="w-2/3 border border-dashed border-gray-300 rounded-sm bg-gray-100"></div>
         </div>
       ),
-      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>'
+      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;" contenteditable="true"><p>Left column</p></div><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;" contenteditable="true"><p>Right column</p></div></div>'
     },
     {
       id: 'two-column-right',
@@ -48,7 +48,7 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout, onDragL
           <div className="w-1/3 border border-dashed border-gray-300 rounded-sm bg-gray-100"></div>
         </div>
       ),
-      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>'
+      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;" contenteditable="true"><p>Left column</p></div><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;" contenteditable="true"><p>Right column</p></div></div>'
     },
     {
       id: 'two-column-equal',
@@ -59,7 +59,7 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout, onDragL
           <div className="w-1/2 border border-dashed border-gray-300 rounded-sm bg-gray-100"></div>
         </div>
       ),
-      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>'
+      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;" contenteditable="true"><p>Left column</p></div><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;" contenteditable="true"><p>Right column</p></div></div>'
     },
     {
       id: 'three-column',
@@ -71,7 +71,7 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout, onDragL
           <div className="w-1/3 border border-dashed border-gray-300 rounded-sm bg-gray-100"></div>
         </div>
       ),
-      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Middle column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>'
+      html: '<div class="draggable-row" style="display: flex; margin-bottom: 20px;"><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;" contenteditable="true"><p>Left column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;" contenteditable="true"><p>Middle column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;" contenteditable="true"><p>Right column</p></div></div>'
     },
     {
       id: 'image-text-overlay',

@@ -62,10 +62,10 @@ const EditorContent: React.FC<EditorContentProps> = ({
     const editor = editorRef.current;
     if (!editor) return;
 
-    // Add drag handlers to draggable rows
-    const setupDraggableRows = () => {
+    // Add drag handlers to draggable rows and columns
+    const setupDraggableElements = () => {
+      // Setup rows
       const rows = editor.querySelectorAll('.draggable-row');
-      
       rows.forEach(row => {
         if (!(row instanceof HTMLElement)) return;
         
@@ -83,6 +83,31 @@ const EditorContent: React.FC<EditorContentProps> = ({
         row.addEventListener('dragend', () => {
           setDraggedElement(null);
           row.classList.remove('dragging');
+        });
+      });
+      
+      // Setup columns within flex rows
+      const columns = editor.querySelectorAll('.draggable-row > div');
+      columns.forEach(column => {
+        if (!(column instanceof HTMLElement)) return;
+        column.setAttribute('draggable', 'true');
+        
+        column.addEventListener('dragstart', (e) => {
+          // Prevent event bubbling to parent row
+          e.stopPropagation();
+          if (!(e.target instanceof HTMLElement)) return;
+          const columnElement = e.target.closest('div');
+          if (columnElement instanceof HTMLElement && !columnElement.classList.contains('draggable-row')) {
+            setDraggedElement(columnElement);
+            columnElement.classList.add('dragging');
+            // Store the parent row information
+            columnElement.dataset.parentRow = columnElement.parentElement?.className || '';
+          }
+        });
+        
+        column.addEventListener('dragend', () => {
+          setDraggedElement(null);
+          column.classList.remove('dragging');
         });
       });
     };
@@ -117,18 +142,40 @@ const EditorContent: React.FC<EditorContentProps> = ({
       const target = e.target as HTMLElement;
       const dropTarget = target.closest('.draggable-row') as HTMLElement | null || editor;
       
-      if (dropTarget && dropTarget !== draggedElement) {
-        if (dropTarget === editor) {
-          // Append to the end if dropped directly on the editor
-          editor.appendChild(draggedElement);
-        } else {
-          // Insert before the target
-          editor.insertBefore(draggedElement, dropTarget);
-        }
+      // Check if we're dragging a column
+      const isColumn = draggedElement.parentElement && 
+                       draggedElement.parentElement.classList.contains('draggable-row');
+                       
+      if (isColumn) {
+        // Column dragging logic
+        const columnTarget = target.closest('div:not(.draggable-row)') as HTMLElement | null;
+        const rowTarget = target.closest('.draggable-row') as HTMLElement | null;
         
-        // Update content
-        handleInput({ currentTarget: editor } as React.FormEvent<HTMLDivElement>);
+        if (columnTarget && columnTarget !== draggedElement && rowTarget) {
+          // Swap columns within the same row
+          const parentRow = rowTarget;
+          const referenceNode = columnTarget;
+          
+          parentRow.insertBefore(draggedElement, referenceNode);
+        } else if (rowTarget && !columnTarget) {
+          // Append to the row if dropped directly on it
+          rowTarget.appendChild(draggedElement);
+        }
+      } else {
+        // Row dragging logic
+        if (dropTarget && dropTarget !== draggedElement) {
+          if (dropTarget === editor) {
+            // Append to the end if dropped directly on the editor
+            editor.appendChild(draggedElement);
+          } else {
+            // Insert before the target
+            editor.insertBefore(draggedElement, dropTarget);
+          }
+        }
       }
+      
+      // Update content
+      handleInput({ currentTarget: editor } as React.FormEvent<HTMLDivElement>);
       
       // Remove drag-over class from all elements
       document.querySelectorAll('.drag-over').forEach(el => {
@@ -170,7 +217,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             }
             
             handleInput({ currentTarget: editor } as React.FormEvent<HTMLDivElement>);
-            setupDraggableRows(); // Setup new draggable rows
+            setupDraggableElements(); // Setup new draggable rows
           };
           reader.readAsDataURL(file);
         }
@@ -184,13 +231,13 @@ const EditorContent: React.FC<EditorContentProps> = ({
     
     // Initial setup of existing rows
     const observer = new MutationObserver(() => {
-      setupDraggableRows();
+      setupDraggableElements();
     });
     
     observer.observe(editor, { childList: true, subtree: true });
     
     // Setup initial draggable rows
-    setupDraggableRows();
+    setupDraggableElements();
     
     return () => {
       editor.removeEventListener('dragover', handleDragOver);
