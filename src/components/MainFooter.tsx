@@ -16,8 +16,10 @@ const MainFooter: React.FC = () => {
           <div className="flex gap-6">
             <Link to="/" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Home</Link>
             <Link to="/editor" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Editor</Link>
-            <a href="#features" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Features</a>
-            <a href="#templates" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Templates</a>
+            <Link to="/" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Features</Link>
+            <Link to="/" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Templates</Link>
+            <Link to="/" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Help</Link>
+            <Link to="/" className="text-sm text-muted-foreground hover:text-editor-purple transition-colors">Privacy</Link>
           </div>
         </div>
       </div>

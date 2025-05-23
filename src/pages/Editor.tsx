@@ -1,33 +1,46 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import Header from "@/components/Editor/Header";
 import EditorToolbar from "@/components/Editor/EditorToolbar";
 import EditorContent from "@/components/Editor/EditorContent";
+import Footer from "@/components/Editor/Footer";
 import ImageUploader from "@/components/Editor/ImageUploader";
 import LinkEditor from "@/components/Editor/LinkEditor";
-import Footer from "@/components/Editor/Footer";
-import Header from "@/components/Editor/Header";
 import TemplateSelector from "@/components/Editor/TemplateSelector";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { toast } from "@/components/ui/use-toast";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import ContentBlocks from "@/components/Editor/ContentBlocks";
+import SettingsPanel from "@/components/Editor/SettingsPanel";
+import LayoutSelector from "@/components/Editor/LayoutSelector";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/use-toast";
 
 const Editor = () => {
+  // Core state
   const [content, setContent] = useState("<p>Start typing your message here...</p>");
   const [footerContent, setFooterContent] = useState("<p>Company Name | Address | <a href='mailto:contact@example.com'>contact@example.com</a></p>");
+  const [subject, setSubject] = useState("");
   const [selection, setSelection] = useState<Selection | null>(null);
+  
+  // UI state
+  const [activeTab, setActiveTab] = useState("edit");
+  const [sidePanel, setSidePanel] = useState<"content" | "rows" | "settings">("content");
+  const [showTemplateSelector, setShowTemplateSelector] = useState(true);
   const [showImageUploader, setShowImageUploader] = useState(false);
   const [showLinkEditor, setShowLinkEditor] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [activeTab, setActiveTab] = useState("edit");
-  const [subject, setSubject] = useState("");
-  const [showTemplateSelector, setShowTemplateSelector] = useState(true);
   const previewRef = useRef<HTMLDivElement>(null);
   
+  // Settings
+  const [emailSettings, setEmailSettings] = useState({
+    contentWidth: 650,
+    alignment: 'center',
+    backgroundColor: '#ffffff',
+    contentBackgroundColor: 'transparent',
+  });
+  
+  // Format tracking
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
     italic: false,
@@ -36,6 +49,7 @@ const Editor = () => {
     align: "left",
   });
 
+  // Check current formatting
   const checkFormatting = () => {
     if (!selection) return;
     
@@ -75,6 +89,7 @@ const Editor = () => {
     }
   }, [selection]);
 
+  // Text formatting handlers
   const handleBold = () => {
     document.execCommand("bold", false);
     checkFormatting();
@@ -91,7 +106,6 @@ const Editor = () => {
   };
 
   const handleHeading = (level: number) => {
-    // Toggle between heading and paragraph
     if (activeFormats.heading === level) {
       document.execCommand("formatBlock", false, "<p>");
     } else {
@@ -105,6 +119,7 @@ const Editor = () => {
     checkFormatting();
   };
 
+  // Link & Image handlers
   const handleLink = () => {
     let selectedText = "";
     if (selection && !selection.isCollapsed) {
@@ -122,39 +137,108 @@ const Editor = () => {
   };
 
   const handleInsertImage = (imageUrl: string) => {
-    document.execCommand("insertHTML", false, `<img src="${imageUrl}" alt="Inserted image" />`);
+    document.execCommand("insertHTML", false, `<img src="${imageUrl}" alt="Inserted image" style="max-width: 100%;" />`);
   };
-
-  const colorOptions = [
-    { name: "Red", value: "#ef4444" },
-    { name: "Blue", value: "#3b82f6" },
-    { name: "Green", value: "#10b981" },
-    { name: "Purple", value: "#8b5cf6" },
-    { name: "Pink", value: "#ec4899" },
-    { name: "Orange", value: "#f97316" },
-    { name: "Teal", value: "#14b8a6" },
-    { name: "Gray", value: "#6b7280" },
-    { name: "Black", value: "#000000" },
-  ];
 
   const handleColor = (color: string) => {
     document.execCommand("foreColor", false, color);
   };
 
-  const handleSend = () => {
+  // Content block handler
+  const handleInsertContentBlock = (blockType: string) => {
+    let html = '';
+    
+    switch(blockType) {
+      case 'title':
+        html = '<h2>Your Title Here</h2>';
+        break;
+      case 'paragraph':
+        html = '<p>Your paragraph text here. Click to edit.</p>';
+        break;
+      case 'list':
+        html = '<ul><li>List item 1</li><li>List item 2</li><li>List item 3</li></ul>';
+        break;
+      case 'button':
+        html = '<div style="text-align: center; margin: 15px 0;"><a href="#" style="background-color: #8b5cf6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">Click Me</a></div>';
+        break;
+      case 'divider':
+        html = '<hr style="border: 0; height: 1px; background-color: #e5e7eb; margin: 20px 0;" />';
+        break;
+      case 'spacer':
+        html = '<div style="height: 30px;"></div>';
+        break;
+      case 'image':
+        setShowImageUploader(true);
+        return;
+      default:
+        html = `<p>[${blockType} block - click to edit]</p>`;
+    }
+    
+    document.execCommand("insertHTML", false, html);
     toast({
-      title: "Message Ready",
-      description: "Your message has been prepared and is ready to send!",
+      title: "Block Added",
+      description: `${blockType} block has been added to your email.`,
     });
   };
 
-  const handleGetSelectedText = () => {
-    if (selection && !selection.isCollapsed) {
-      return selection.toString();
+  // Layout handler
+  const handleSelectLayout = (layoutId: string) => {
+    let layoutHtml = '';
+    
+    switch(layoutId) {
+      case 'single-column':
+        layoutHtml = '<div style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>Single column content area. Click to edit.</p></div>';
+        break;
+      case 'two-column-left':
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        break;
+      case 'two-column-right':
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        break;
+      case 'two-column-equal':
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        break;
+      case 'three-column':
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Middle column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        break;
+      default:
+        layoutHtml = '<div style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>Content area. Click to edit.</p></div>';
     }
-    return "";
+    
+    document.execCommand("insertHTML", false, layoutHtml);
+    toast({
+      title: "Layout Added",
+      description: `${layoutId} layout has been added to your email.`,
+    });
   };
 
+  // Settings handler
+  const handleSettingsChange = (newSettings: any) => {
+    setEmailSettings({
+      ...emailSettings,
+      ...newSettings
+    });
+    
+    // Apply settings to preview if needed
+    if (previewRef.current) {
+      previewRef.current.style.width = `${newSettings.contentWidth}px`;
+      previewRef.current.style.margin = newSettings.alignment === 'center' ? '0 auto' : '0';
+      previewRef.current.style.backgroundColor = 
+        newSettings.contentBackgroundColor === 'transparent' ? 'transparent' : newSettings.contentBackgroundColor;
+    }
+  };
+
+  // Template selection handler
+  const handleSelectTemplate = (template: any) => {
+    setContent(template.content);
+    setShowTemplateSelector(false);
+    toast({
+      title: "Template Selected",
+      description: `Template "${template.name}" has been loaded.`,
+    });
+  };
+
+  // Copy content handler
   const handleCopyContent = () => {
     const fullContent = `${content}\n\n${footerContent}`;
     navigator.clipboard.writeText(fullContent)
@@ -174,143 +258,190 @@ const Editor = () => {
       });
   };
 
-  const handlePreview = () => {
-    setShowPreview(true);
+  // Toggle settings panel
+  const handleToggleSettings = () => {
+    setSidePanel("settings");
   };
 
-  const handleSelectTemplate = (template: any) => {
-    setContent(template.content);
-    setShowTemplateSelector(false);
+  // Export handler
+  const handleExport = () => {
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${subject || "Email Template"}</title>
+      </head>
+      <body style="margin: 0; padding: 0; background-color: ${emailSettings.backgroundColor};">
+        <div style="max-width: ${emailSettings.contentWidth}px; margin: ${emailSettings.alignment === 'center' ? '0 auto' : '0'}; background-color: ${emailSettings.contentBackgroundColor}; padding: 20px;">
+          <div>${content}</div>
+          <hr style="margin: 20px 0; border: 0; height: 1px; background-color: #e5e7eb;" />
+          <div>${footerContent}</div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    // Create a Blob from the HTML content
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a download link and trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${subject || 'email-template'}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
     toast({
-      title: "Template Selected",
-      description: `Template "${template.name}" has been loaded.`,
+      title: "Export Successful",
+      description: "Your email template has been exported as an HTML file.",
     });
   };
 
-  const handleNewTemplate = () => {
-    setShowTemplateSelector(true);
+  // Helper to get selected text
+  const handleGetSelectedText = () => {
+    if (selection && !selection.isCollapsed) {
+      return selection.toString();
+    }
+    return "";
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header onSend={handleSend} />
+      <Header 
+        onPreview={() => setShowPreview(true)} 
+        onCopy={handleCopyContent}
+        onExport={handleExport}
+        onToggleSettings={handleToggleSettings}
+      />
       
-      <div className="container py-6 flex-grow">
-        <div className="flex justify-end mb-4">
-          <Button 
-            variant="outline" 
-            className="mr-2"
-            onClick={handleNewTemplate}
-          >
-            Change Template
-          </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 mr-2"
-            onClick={handleCopyContent}
-          >
-            <Copy size={16} /> Copy Content
-          </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={handlePreview}
-          >
-            <Eye size={16} /> Preview
-          </Button>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Side Panel */}
+        <div className="w-64 border-r border-border bg-white overflow-auto">
+          <div className="border-b border-border">
+            <div className="flex">
+              <button 
+                className={`flex-1 py-3 font-medium text-sm ${sidePanel === 'content' ? 'text-editor-purple border-b-2 border-editor-purple' : 'text-gray-500'}`}
+                onClick={() => setSidePanel('content')}
+              >
+                CONTENT
+              </button>
+              <button 
+                className={`flex-1 py-3 font-medium text-sm ${sidePanel === 'rows' ? 'text-editor-purple border-b-2 border-editor-purple' : 'text-gray-500'}`}
+                onClick={() => setSidePanel('rows')}
+              >
+                ROWS
+              </button>
+              <button 
+                className={`flex-1 py-3 font-medium text-sm ${sidePanel === 'settings' ? 'text-editor-purple border-b-2 border-editor-purple' : 'text-gray-500'}`}
+                onClick={() => setSidePanel('settings')}
+              >
+                SETTINGS
+              </button>
+            </div>
+          </div>
+          
+          {sidePanel === 'content' && (
+            <ContentBlocks onInsertContent={handleInsertContentBlock} />
+          )}
+          
+          {sidePanel === 'rows' && (
+            <LayoutSelector onSelectLayout={handleSelectLayout} />
+          )}
+          
+          {sidePanel === 'settings' && (
+            <SettingsPanel onSettingsChange={handleSettingsChange} />
+          )}
         </div>
 
-        {showTemplateSelector ? (
-          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
-        ) : (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center text-editor-purple">
-                Email/Text Editor
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="edit">Edit</TabsTrigger>
-                  <TabsTrigger value="preview">Preview</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="edit" className="space-y-4">
-                  <div className="mb-6">
-                    <label className="block mb-2 text-sm font-medium">Subject</label>
-                    <input
-                      type="text"
-                      className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
-                      placeholder="Enter subject"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                    />
-                  </div>
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto p-6">
+          {showTemplateSelector ? (
+            <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-center text-editor-purple">
+                  Email/Text Editor
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-4">
+                    <TabsTrigger value="edit">Edit</TabsTrigger>
+                    <TabsTrigger value="preview">Preview</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="edit" className="space-y-4">
+                    <div className="mb-6">
+                      <label className="block mb-2 text-sm font-medium">Subject</label>
+                      <input
+                        type="text"
+                        className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                        placeholder="Enter subject"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                      />
+                    </div>
 
-                  <div className="bg-white rounded-md shadow-sm">
-                    <EditorToolbar
-                      onBold={handleBold}
-                      onItalic={handleItalic}
-                      onUnderline={handleUnderline}
-                      onHeading={handleHeading}
-                      onAlign={handleAlign}
-                      onLink={handleLink}
-                      onImage={handleImage}
-                      onColor={handleColor}
-                      activeFormats={activeFormats}
-                    />
-                    
-                    <Popover>
-                      <PopoverContent className="w-auto p-3">
-                        <div className="flex flex-wrap gap-2 max-w-[220px]">
-                          {colorOptions.map((color) => (
-                            <div
-                              key={color.value}
-                              className="h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
-                              style={{ backgroundColor: color.value }}
-                              onClick={() => handleColor(color.value)}
-                              title={color.name}
-                            />
-                          ))}
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                    
-                    <EditorContent
-                      content={content}
-                      onChange={setContent}
-                      onSelectionChange={setSelection}
-                    />
-                  </div>
+                    <div className="bg-white rounded-md shadow-sm">
+                      <EditorToolbar
+                        onBold={handleBold}
+                        onItalic={handleItalic}
+                        onUnderline={handleUnderline}
+                        onHeading={handleHeading}
+                        onAlign={handleAlign}
+                        onLink={handleLink}
+                        onImage={handleImage}
+                        onColor={handleColor}
+                        activeFormats={activeFormats}
+                      />
+                      
+                      <EditorContent
+                        content={content}
+                        onChange={setContent}
+                        onSelectionChange={setSelection}
+                      />
+                    </div>
 
-                  <Footer content={footerContent} onChange={setFooterContent} />
-                </TabsContent>
-                
-                <TabsContent value="preview">
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="preview-container border rounded-lg p-6 bg-white">
-                        <div className="preview-subject mb-4">
-                          <h3 className="text-lg font-medium">Subject: {subject}</h3>
+                    <Footer content={footerContent} onChange={setFooterContent} />
+                  </TabsContent>
+                  
+                  <TabsContent value="preview">
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div 
+                          className="preview-container border rounded-lg p-6 bg-white"
+                          style={{
+                            maxWidth: `${emailSettings.contentWidth}px`,
+                            margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
+                            backgroundColor: emailSettings.contentBackgroundColor === 'transparent' ? 'transparent' : emailSettings.contentBackgroundColor
+                          }}
+                        >
+                          <div className="preview-subject mb-4">
+                            <h3 className="text-lg font-medium">Subject: {subject}</h3>
+                          </div>
+                          <div 
+                            className="content-preview mb-8"
+                            dangerouslySetInnerHTML={{ __html: content }}
+                          />
+                          <hr className="my-6" />
+                          <div 
+                            className="footer-preview text-sm text-gray-600"
+                            dangerouslySetInnerHTML={{ __html: footerContent }}
+                          />
                         </div>
-                        <div 
-                          className="content-preview mb-8"
-                          dangerouslySetInnerHTML={{ __html: content }}
-                        />
-                        <hr className="my-6" />
-                        <div 
-                          className="footer-preview text-sm text-gray-600"
-                          dangerouslySetInnerHTML={{ __html: footerContent }}
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        )}
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
 
       {/* Modals */}
@@ -332,12 +463,19 @@ const Editor = () => {
           <DialogHeader>
             <DialogTitle>Message Preview</DialogTitle>
           </DialogHeader>
-          <div className="preview-container p-6 bg-white border rounded-lg">
+          <div 
+            ref={previewRef}
+            className="preview-container p-6 bg-white border rounded-lg"
+            style={{
+              maxWidth: `${emailSettings.contentWidth}px`,
+              margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
+              backgroundColor: emailSettings.contentBackgroundColor === 'transparent' ? 'transparent' : emailSettings.contentBackgroundColor
+            }}
+          >
             <div className="preview-subject mb-4">
               <h3 className="text-lg font-medium">Subject: {subject}</h3>
             </div>
             <div
-              ref={previewRef}
               className="content-preview mb-8"
               dangerouslySetInnerHTML={{ __html: content }}
             />
@@ -351,6 +489,9 @@ const Editor = () => {
             <Button variant="outline" onClick={() => setShowPreview(false)}>Close</Button>
             <Button onClick={handleCopyContent}>
               <Copy className="mr-2 h-4 w-4" /> Copy Content
+            </Button>
+            <Button onClick={handleExport}>
+              <Download className="mr-2 h-4 w-4" /> Export
             </Button>
           </div>
         </DialogContent>

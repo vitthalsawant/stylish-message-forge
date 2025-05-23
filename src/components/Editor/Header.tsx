@@ -2,15 +2,26 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Save, Send } from 'lucide-react';
+import { ArrowLeft, Save, Send, Eye, Copy, Download, Settings2 } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 interface HeaderProps {
   onSave?: () => void;
   onSend?: () => void;
+  onPreview?: () => void;
+  onExport?: () => void;
+  onCopy?: () => void;
+  onToggleSettings?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onSave, onSend }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  onSave, 
+  onSend, 
+  onPreview,
+  onExport,
+  onCopy,
+  onToggleSettings
+}) => {
   const handleSave = () => {
     if (onSave) {
       onSave();
@@ -51,10 +62,46 @@ const Header: React.FC<HeaderProps> = ({ onSave, onSend }) => {
           variant="outline" 
           size="sm" 
           className="gap-2"
+          onClick={onToggleSettings}
+        >
+          <Settings2 size={16} />
+          Settings
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-2"
+          onClick={onPreview}
+        >
+          <Eye size={16} />
+          Preview
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-2"
+          onClick={onCopy}
+        >
+          <Copy size={16} />
+          Copy
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-2"
+          onClick={onExport}
+        >
+          <Download size={16} />
+          Export
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-2"
           onClick={handleSave}
         >
           <Save size={16} />
-          Save Template
+          Save
         </Button>
         <Button 
           size="sm" 
@@ -62,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({ onSave, onSend }) => {
           onClick={handleSend}
         >
           <Send size={16} />
-          Send Email
+          Send
         </Button>
       </div>
     </div>
