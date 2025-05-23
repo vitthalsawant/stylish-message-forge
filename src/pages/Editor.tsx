@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import Header from "@/components/Editor/Header";
 import EditorToolbar from "@/components/Editor/EditorToolbar";
@@ -15,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
+import { Copy, Download } from "lucide-react";
 
 const Editor = () => {
   // Core state
