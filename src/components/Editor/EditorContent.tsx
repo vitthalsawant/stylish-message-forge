@@ -73,8 +73,11 @@ const EditorContent: React.FC<EditorContentProps> = ({
         
         row.addEventListener('dragstart', (e) => {
           if (!(e.target instanceof HTMLElement)) return;
-          setDraggedElement(e.target.closest('.draggable-row'));
-          e.target.closest('.draggable-row')?.classList.add('dragging');
+          const closestRow = e.target.closest('.draggable-row');
+          if (closestRow instanceof HTMLElement) {
+            setDraggedElement(closestRow);
+            closestRow.classList.add('dragging');
+          }
         });
         
         row.addEventListener('dragend', () => {
@@ -90,10 +93,10 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (!draggedElement) return;
 
       const target = e.target as HTMLElement;
-      const dropTarget = target.closest('.draggable-row') || target;
+      const dropTarget = target.closest('.draggable-row') as HTMLElement | null || target;
       
       if (dropTarget !== dragOverElement) {
-        setDragOverElement(dropTarget as HTMLElement);
+        setDragOverElement(dropTarget);
       }
       
       if (dropTarget && dropTarget !== draggedElement) {
@@ -103,7 +106,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
 
     const handleDragLeave = (e: DragEvent) => {
       const target = e.target as HTMLElement;
-      const dropTarget = target.closest('.draggable-row') || target;
+      const dropTarget = target.closest('.draggable-row') as HTMLElement | null || target;
       dropTarget?.classList.remove('drag-over');
     };
 
@@ -112,7 +115,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (!draggedElement) return;
       
       const target = e.target as HTMLElement;
-      const dropTarget = target.closest('.draggable-row') || editor;
+      const dropTarget = target.closest('.draggable-row') as HTMLElement | null || editor;
       
       if (dropTarget && dropTarget !== draggedElement) {
         if (dropTarget === editor) {
