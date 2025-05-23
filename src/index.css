@@ -159,4 +159,56 @@
   .preview-container .content-preview img {
     @apply max-w-full h-auto my-4 rounded-md;
   }
+
+  /* Drag and Drop Styles */
+  .draggable-row {
+    @apply border-2 border-transparent cursor-move mb-4;
+    position: relative;
+  }
+
+  .draggable-row:hover {
+    @apply border-dashed border-gray-300;
+  }
+
+  .draggable-row.dragging {
+    @apply opacity-50;
+  }
+
+  .draggable-row.drag-over {
+    @apply border-primary;
+  }
+
+  /* Image Overlay Styles */
+  .image-container {
+    position: relative;
+    overflow: hidden;
+    min-height: 100px;
+  }
+
+  .image-overlay {
+    background: rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .image-overlay:focus {
+    outline: none;
+  }
+
+  /* Template color styles */
+  .template-purple {
+    background: linear-gradient(180deg, #f5f3ff 0%, #ddd6fe 100%);
+  }
+  
+  .template-blue {
+    background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+  }
+  
+  .template-green {
+    background: linear-gradient(180deg, #dcfce7 0%, #a7f3d0 100%);
+  }
 }

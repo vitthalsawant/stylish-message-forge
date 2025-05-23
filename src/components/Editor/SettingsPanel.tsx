@@ -6,6 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface SettingsPanelProps {
   onSettingsChange: (settings: any) => void;
@@ -20,13 +21,22 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onSettingsChange }) => {
     backgroundImage: false,
     defaultFont: 'Inter',
     linkColor: '#3b82f6',
-    language: 'en'
+    language: 'en',
+    templateColor: 'white'
   });
 
   const handleSettingChange = (key: string, value: any) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     onSettingsChange(newSettings);
+    
+    // Apply template color directly for immediate feedback
+    if (key === 'templateColor') {
+      document.querySelector('.editor-content')?.classList.remove('template-purple', 'template-blue', 'template-green');
+      if (value !== 'white') {
+        document.querySelector('.editor-content')?.classList.add(`template-${value}`);
+      }
+    }
   };
 
   return (
@@ -68,6 +78,44 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onSettingsChange }) => {
               CENTER
             </Button>
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Template Color Theme</Label>
+          <RadioGroup 
+            defaultValue="white" 
+            value={settings.templateColor}
+            onValueChange={(value) => handleSettingChange('templateColor', value)}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="white" id="color-white" />
+              <Label htmlFor="color-white" className="flex items-center">
+                <div className="w-6 h-6 rounded-full bg-white border border-gray-300 mr-2"></div>
+                White
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="purple" id="color-purple" />
+              <Label htmlFor="color-purple" className="flex items-center">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-b from-purple-100 to-purple-300 mr-2"></div>
+                Purple
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="blue" id="color-blue" />
+              <Label htmlFor="color-blue" className="flex items-center">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-b from-blue-100 to-blue-300 mr-2"></div>
+                Blue
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="green" id="color-green" />
+              <Label htmlFor="color-green" className="flex items-center">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-b from-green-100 to-green-300 mr-2"></div>
+                Green
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <div className="space-y-2">
