@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 
 interface EditorContentProps {
@@ -15,6 +16,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
   const [isInitialized, setIsInitialized] = useState(false);
   const [draggedElement, setDraggedElement] = useState<HTMLElement | null>(null);
   const [dragOverElement, setDragOverElement] = useState<HTMLElement | null>(null);
+  const [dropIndicatorPosition, setDropIndicatorPosition] = useState<{ top: number; visible: boolean }>({ top: 0, visible: false });
 
   useEffect(() => {
     const handleSelection = () => {
@@ -63,6 +65,18 @@ const EditorContent: React.FC<EditorContentProps> = ({
     }
   }, [content, isInitialized]);
 
+  // Get the position for drop indicator
+  const getDropPosition = (e: DragEvent, targetElement: HTMLElement) => {
+    const rect = targetElement.getBoundingClientRect();
+    const mouseY = e.clientY;
+    const elementCenter = rect.top + rect.height / 2;
+    
+    return {
+      position: mouseY < elementCenter ? 'before' : 'after',
+      y: mouseY < elementCenter ? rect.top : rect.bottom
+    };
+  };
+
   // Setup drag and drop functionality
   useEffect(() => {
     const editor = editorRef.current;
@@ -76,6 +90,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
         const rowElement = row as HTMLElement;
         
         rowElement.setAttribute('draggable', 'true');
+        rowElement.style.cursor = 'move';
         
         rowElement.addEventListener('dragstart', (e) => {
           const target = e.target as HTMLElement;
@@ -83,12 +98,21 @@ const EditorContent: React.FC<EditorContentProps> = ({
           if (closestRow) {
             setDraggedElement(closestRow);
             closestRow.classList.add('dragging');
+            closestRow.style.opacity = '0.5';
+            e.dataTransfer!.effectAllowed = 'move';
           }
         });
         
         rowElement.addEventListener('dragend', () => {
           setDraggedElement(null);
+          setDropIndicatorPosition({ top: 0, visible: false });
           rowElement.classList.remove('dragging');
+          rowElement.style.opacity = '1';
+          
+          // Remove drag-over classes from all elements
+          document.querySelectorAll('.drag-over').forEach(el => {
+            el.classList.remove('drag-over');
+          });
         });
       });
       
@@ -96,25 +120,29 @@ const EditorContent: React.FC<EditorContentProps> = ({
       const columns = editor.querySelectorAll('.draggable-row > div');
       columns.forEach(column => {
         const columnElement = column as HTMLElement;
-        columnElement.setAttribute('draggable', 'true');
-        
-        columnElement.addEventListener('dragstart', (e) => {
-          // Prevent event bubbling to parent row
-          e.stopPropagation();
-          const target = e.target as HTMLElement;
-          const columnEl = target.closest('div') as HTMLElement;
-          if (columnEl && !columnEl.classList.contains('draggable-row')) {
-            setDraggedElement(columnEl);
-            columnEl.classList.add('dragging');
-            // Store the parent row information
-            columnEl.dataset.parentRow = columnEl.parentElement?.className || '';
-          }
-        });
-        
-        columnElement.addEventListener('dragend', () => {
-          setDraggedElement(null);
-          columnElement.classList.remove('dragging');
-        });
+        if (!columnElement.classList.contains('draggable-row')) {
+          columnElement.setAttribute('draggable', 'true');
+          columnElement.style.cursor = 'move';
+          
+          columnElement.addEventListener('dragstart', (e) => {
+            // Prevent event bubbling to parent row
+            e.stopPropagation();
+            const target = e.target as HTMLElement;
+            const columnEl = target.closest('div') as HTMLElement;
+            if (columnEl && !columnEl.classList.contains('draggable-row')) {
+              setDraggedElement(columnEl);
+              columnEl.classList.add('dragging');
+              columnEl.style.opacity = '0.5';
+              e.dataTransfer!.effectAllowed = 'move';
+            }
+          });
+          
+          columnElement.addEventListener('dragend', () => {
+            setDraggedElement(null);
+            columnElement.classList.remove('dragging');
+            columnElement.style.opacity = '1';
+          });
+        }
       });
     };
 
@@ -124,22 +152,40 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (!draggedElement) return;
 
       const target = e.target as HTMLElement;
-      const dropTarget = target.closest('.draggable-row') as HTMLElement | null || target;
-      
-      if (dropTarget !== dragOverElement) {
-        setDragOverElement(dropTarget);
-      }
+      const dropTarget = target.closest('.draggable-row') as HTMLElement | null;
       
       if (dropTarget && dropTarget !== draggedElement) {
+        const dropInfo = getDropPosition(e, dropTarget);
+        setDropIndicatorPosition({
+          top: dropInfo.y - editor.getBoundingClientRect().top,
+          visible: true
+        });
+        
+        // Remove previous drag-over classes
+        document.querySelectorAll('.drag-over').forEach(el => {
+          el.classList.remove('drag-over');
+        });
+        
         dropTarget.classList.add('drag-over');
+        setDragOverElement(dropTarget);
+      } else if (!dropTarget) {
+        // Dropping at the end of the editor
+        const editorRect = editor.getBoundingClientRect();
+        setDropIndicatorPosition({
+          top: e.clientY - editorRect.top,
+          visible: true
+        });
       }
     };
 
     const handleDragLeave = (e: DragEvent) => {
       const target = e.target as HTMLElement;
-      const dropTarget = target.closest('.draggable-row') as HTMLElement | null || target;
-      if (dropTarget) {
-        dropTarget.classList.remove('drag-over');
+      // Only hide indicator if leaving the editor completely
+      if (!editor.contains(e.relatedTarget as Node)) {
+        setDropIndicatorPosition({ top: 0, visible: false });
+        document.querySelectorAll('.drag-over').forEach(el => {
+          el.classList.remove('drag-over');
+        });
       }
     };
 
@@ -148,7 +194,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (!draggedElement) return;
       
       const target = e.target as HTMLElement;
-      const dropTarget = target.closest('.draggable-row') as HTMLElement | null || editor;
+      const dropTarget = target.closest('.draggable-row') as HTMLElement | null;
       
       // Check if we're dragging a column
       const isColumn = draggedElement.parentElement && 
@@ -160,11 +206,16 @@ const EditorContent: React.FC<EditorContentProps> = ({
         const rowTarget = target.closest('.draggable-row') as HTMLElement | null;
         
         if (columnTarget && columnTarget !== draggedElement && rowTarget) {
-          // Swap columns within the same row
+          // Swap columns within the same row or move to different row
           const parentRow = rowTarget;
           const referenceNode = columnTarget;
           
-          parentRow.insertBefore(draggedElement, referenceNode);
+          const dropInfo = getDropPosition(e, referenceNode);
+          if (dropInfo.position === 'before') {
+            parentRow.insertBefore(draggedElement, referenceNode);
+          } else {
+            parentRow.insertBefore(draggedElement, referenceNode.nextSibling);
+          }
         } else if (rowTarget && !columnTarget) {
           // Append to the row if dropped directly on it
           rowTarget.appendChild(draggedElement);
@@ -172,26 +223,30 @@ const EditorContent: React.FC<EditorContentProps> = ({
       } else {
         // Row dragging logic
         if (dropTarget && dropTarget !== draggedElement) {
-          if (dropTarget === editor) {
-            // Append to the end if dropped directly on the editor
-            editor.appendChild(draggedElement);
-          } else {
-            // Insert before the target
+          const dropInfo = getDropPosition(e, dropTarget);
+          if (dropInfo.position === 'before') {
             editor.insertBefore(draggedElement, dropTarget);
+          } else {
+            editor.insertBefore(draggedElement, dropTarget.nextSibling);
           }
+        } else if (!dropTarget) {
+          // Append to the end if dropped directly on the editor
+          editor.appendChild(draggedElement);
         }
       }
       
       // Update content
       handleInput({ currentTarget: editor } as React.FormEvent<HTMLDivElement>);
       
+      // Clean up
+      setDropIndicatorPosition({ top: 0, visible: false });
+      setDraggedElement(null);
+      setDragOverElement(null);
+      
       // Remove drag-over class from all elements
       document.querySelectorAll('.drag-over').forEach(el => {
         el.classList.remove('drag-over');
       });
-      
-      setDraggedElement(null);
-      setDragOverElement(null);
     };
 
     // Handle file drops for image uploads and content blocks
@@ -282,19 +337,54 @@ const EditorContent: React.FC<EditorContentProps> = ({
   }, [draggedElement, dragOverElement]);
 
   return (
-    <div
-      ref={editorRef}
-      className="editor-content p-4 border border-t-0 rounded-b-md min-h-[300px] focus:outline-none focus:ring-1 focus:ring-primary bg-white"
-      contentEditable
-      onInput={handleInput}
-      onBlur={handleInput}
-      onPaste={handlePaste}
-      suppressContentEditableWarning={true}
-      style={{ 
-        whiteSpace: 'pre-wrap',
-        color: 'inherit'
-      }}
-    />
+    <div className="relative">
+      <div
+        ref={editorRef}
+        className="editor-content p-4 border border-t-0 rounded-b-md min-h-[300px] focus:outline-none focus:ring-1 focus:ring-primary bg-white"
+        contentEditable
+        onInput={handleInput}
+        onBlur={handleInput}
+        onPaste={handlePaste}
+        suppressContentEditableWarning={true}
+        style={{ 
+          whiteSpace: 'pre-wrap',
+          color: 'inherit'
+        }}
+      />
+      
+      {/* Drop indicator */}
+      {dropIndicatorPosition.visible && (
+        <div 
+          className="absolute left-0 right-0 h-0.5 bg-blue-500 z-10 pointer-events-none"
+          style={{ 
+            top: dropIndicatorPosition.top + 16, // Account for padding
+            marginLeft: '16px',
+            marginRight: '16px'
+          }}
+        />
+      )}
+      
+      {/* Custom styles for drag effects */}
+      <style jsx>{`
+        .dragging {
+          opacity: 0.5 !important;
+          transform: rotate(2deg);
+        }
+        
+        .drag-over {
+          background-color: rgba(59, 130, 246, 0.1) !important;
+          border: 2px dashed #3b82f6 !important;
+        }
+        
+        .draggable-row:hover {
+          outline: 1px dashed #d1d5db;
+        }
+        
+        .draggable-row {
+          transition: all 0.2s ease;
+        }
+      `}</style>
+    </div>
   );
 };
 
