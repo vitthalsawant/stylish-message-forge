@@ -67,51 +67,47 @@ const EditorContent: React.FC<EditorContentProps> = ({
       // Setup rows
       const rows = editor.querySelectorAll('.draggable-row');
       rows.forEach(row => {
-        if (!(row instanceof HTMLElement)) return;
+        const rowElement = row as HTMLElement;
         
-        row.setAttribute('draggable', 'true');
+        rowElement.setAttribute('draggable', 'true');
         
-        row.addEventListener('dragstart', (e) => {
-          if (!(e.target instanceof HTMLElement)) return;
-          const closestRow = e.target.closest('.draggable-row');
-          if (closestRow instanceof HTMLElement) {
+        rowElement.addEventListener('dragstart', (e) => {
+          const target = e.target as HTMLElement;
+          const closestRow = target.closest('.draggable-row') as HTMLElement;
+          if (closestRow) {
             setDraggedElement(closestRow);
             closestRow.classList.add('dragging');
           }
         });
         
-        row.addEventListener('dragend', () => {
+        rowElement.addEventListener('dragend', () => {
           setDraggedElement(null);
-          if (row instanceof HTMLElement) {
-            row.classList.remove('dragging');
-          }
+          rowElement.classList.remove('dragging');
         });
       });
       
       // Setup columns within flex rows
       const columns = editor.querySelectorAll('.draggable-row > div');
       columns.forEach(column => {
-        if (!(column instanceof HTMLElement)) return;
-        column.setAttribute('draggable', 'true');
+        const columnElement = column as HTMLElement;
+        columnElement.setAttribute('draggable', 'true');
         
-        column.addEventListener('dragstart', (e) => {
+        columnElement.addEventListener('dragstart', (e) => {
           // Prevent event bubbling to parent row
           e.stopPropagation();
-          if (!(e.target instanceof HTMLElement)) return;
-          const columnElement = e.target.closest('div');
-          if (columnElement instanceof HTMLElement && !columnElement.classList.contains('draggable-row')) {
-            setDraggedElement(columnElement);
-            columnElement.classList.add('dragging');
+          const target = e.target as HTMLElement;
+          const columnEl = target.closest('div') as HTMLElement;
+          if (columnEl && !columnEl.classList.contains('draggable-row')) {
+            setDraggedElement(columnEl);
+            columnEl.classList.add('dragging');
             // Store the parent row information
-            columnElement.dataset.parentRow = columnElement.parentElement?.className || '';
+            columnEl.dataset.parentRow = columnEl.parentElement?.className || '';
           }
         });
         
-        column.addEventListener('dragend', () => {
+        columnElement.addEventListener('dragend', () => {
           setDraggedElement(null);
-          if (column instanceof HTMLElement) {
-            column.classList.remove('dragging');
-          }
+          columnElement.classList.remove('dragging');
         });
       });
     };
@@ -192,7 +188,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
       setDragOverElement(null);
     };
 
-    // Handle file drops for image uploads
+    // Handle file drops for image uploads and content blocks
     const handleFileDrop = (e: DragEvent) => {
       e.preventDefault();
       
