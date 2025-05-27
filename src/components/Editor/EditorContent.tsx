@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 
 interface EditorContentProps {
@@ -364,26 +363,28 @@ const EditorContent: React.FC<EditorContentProps> = ({
         />
       )}
       
-      {/* Custom styles for drag effects */}
-      <style jsx>{`
-        .dragging {
-          opacity: 0.5 !important;
-          transform: rotate(2deg);
-        }
-        
-        .drag-over {
-          background-color: rgba(59, 130, 246, 0.1) !important;
-          border: 2px dashed #3b82f6 !important;
-        }
-        
-        .draggable-row:hover {
-          outline: 1px dashed #d1d5db;
-        }
-        
-        .draggable-row {
-          transition: all 0.2s ease;
-        }
-      `}</style>
+      {/* Custom styles for drag effects using CSS classes */}
+      <style>
+        {`
+          .dragging {
+            opacity: 0.5 !important;
+            transform: rotate(2deg);
+          }
+          
+          .drag-over {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            border: 2px dashed #3b82f6 !important;
+          }
+          
+          .draggable-row:hover {
+            outline: 1px dashed #d1d5db;
+          }
+          
+          .draggable-row {
+            transition: all 0.2s ease;
+          }
+        `}
+      </style>
     </div>
   );
 };
