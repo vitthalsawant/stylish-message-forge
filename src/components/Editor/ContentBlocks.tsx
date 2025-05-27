@@ -14,7 +14,8 @@ import {
   Film,
   Menu as MenuIcon,
   Sticker,
-  FileImage
+  FileImage,
+  Layers
 } from 'lucide-react';
 
 interface ContentBlockProps {
@@ -69,6 +70,12 @@ const ContentBlocks: React.FC<ContentBlocksProps> = ({ onInsertContent }) => {
       icon: <ImageIcon size={24} />, 
       type: 'image',
       html: ''
+    },
+    { 
+      title: 'IMAGE BOX', 
+      icon: <Layers size={24} />, 
+      type: 'image-box',
+      html: '<div class="draggable-row" style="margin-bottom: 20px; position: relative; min-height: 200px; background-image: url(\'/lovable-uploads/1219873c-5ae4-4d94-acc8-80a2055bd45b.png\'); background-size: cover; background-position: center; background-repeat: no-repeat; border: 1px dashed #d1d5db; border-radius: 8px; overflow: hidden;"><div contenteditable="true" style="position: relative; z-index: 2; padding: 20px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.3); height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;"><p style="margin: 0; font-size: 18px; font-weight: bold;">Click here to add your text over the image</p></div></div>'
     },
     { 
       title: 'BUTTON', 
