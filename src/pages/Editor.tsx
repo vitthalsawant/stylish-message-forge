@@ -5,6 +5,7 @@ import EditorContent from "@/components/Editor/EditorContent";
 import Footer from "@/components/Editor/Footer";
 import ImageUploader from "@/components/Editor/ImageUploader";
 import LinkEditor from "@/components/Editor/LinkEditor";
+import BackgroundImageSelector from "@/components/Editor/BackgroundImageSelector";
 import TemplateSelector from "@/components/Editor/TemplateSelector";
 import ContentBlocks from "@/components/Editor/ContentBlocks";
 import SettingsPanel from "@/components/Editor/SettingsPanel";
@@ -22,6 +23,7 @@ const Editor = () => {
   const [footerContent, setFooterContent] = useState("<p>Company Name | Address | <a href='mailto:contact@example.com'>contact@example.com</a></p>");
   const [subject, setSubject] = useState("");
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [backgroundImage, setBackgroundImage] = useState("");
   
   // UI state
   const [activeTab, setActiveTab] = useState("edit");
@@ -29,6 +31,7 @@ const Editor = () => {
   const [showTemplateSelector, setShowTemplateSelector] = useState(true);
   const [showImageUploader, setShowImageUploader] = useState(false);
   const [showLinkEditor, setShowLinkEditor] = useState(false);
+  const [showBackgroundSelector, setShowBackgroundSelector] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   
@@ -138,6 +141,18 @@ const Editor = () => {
 
   const handleInsertImage = (imageUrl: string) => {
     document.execCommand("insertHTML", false, `<img src="${imageUrl}" alt="Inserted image" style="max-width: 100%;" />`);
+  };
+
+  const handleBackgroundImage = () => {
+    setShowBackgroundSelector(true);
+  };
+
+  const handleSetBackgroundImage = (imageUrl: string) => {
+    setBackgroundImage(imageUrl);
+    toast({
+      title: imageUrl ? "Background Set" : "Background Removed",
+      description: imageUrl ? "Background image has been applied to your template." : "Background image has been removed.",
+    });
   };
 
   const handleColor = (color: string) => {
@@ -270,6 +285,9 @@ const Editor = () => {
 
   // Export handler
   const handleExport = () => {
+    const backgroundStyle = backgroundImage ? 
+      `background-image: url('${backgroundImage}'); background-size: cover; background-position: center; background-repeat: no-repeat;` : '';
+    
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -278,7 +296,7 @@ const Editor = () => {
         <title>${subject || "Email Template"}</title>
       </head>
       <body style="margin: 0; padding: 0; background-color: ${emailSettings.backgroundColor};">
-        <div style="max-width: ${emailSettings.contentWidth}px; margin: ${emailSettings.alignment === 'center' ? '0 auto' : '0'}; background-color: ${emailSettings.contentBackgroundColor}; padding: 20px;">
+        <div style="max-width: ${emailSettings.contentWidth}px; margin: ${emailSettings.alignment === 'center' ? '0 auto' : '0'}; background-color: ${emailSettings.contentBackgroundColor}; padding: 20px; ${backgroundStyle}">
           <div>${content}</div>
           <hr style="margin: 20px 0; border: 0; height: 1px; background-color: #e5e7eb;" />
           <div>${footerContent}</div>
@@ -312,6 +330,19 @@ const Editor = () => {
       return selection.toString();
     }
     return "";
+  };
+
+  const getTemplateStyle = () => {
+    const backgroundStyle = backgroundImage ? 
+      `background-image: url('${backgroundImage}'); background-size: cover; background-position: center; background-repeat: no-repeat;` : '';
+    
+    return {
+      backgroundColor: emailSettings.contentBackgroundColor === 'transparent' ? 'transparent' : emailSettings.contentBackgroundColor,
+      backgroundImage: backgroundImage ? `url('${backgroundImage}')` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    };
   };
 
   return (
@@ -392,7 +423,7 @@ const Editor = () => {
                       />
                     </div>
 
-                    <div className="bg-white rounded-md shadow-sm">
+                    <div className="bg-white rounded-md shadow-sm" style={getTemplateStyle()}>
                       <EditorToolbar
                         onBold={handleBold}
                         onItalic={handleItalic}
@@ -401,6 +432,7 @@ const Editor = () => {
                         onAlign={handleAlign}
                         onLink={handleLink}
                         onImage={handleImage}
+                        onBackgroundImage={handleBackgroundImage}
                         onColor={handleColor}
                         activeFormats={activeFormats}
                       />
@@ -423,7 +455,7 @@ const Editor = () => {
                           style={{
                             maxWidth: `${emailSettings.contentWidth}px`,
                             margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
-                            backgroundColor: emailSettings.contentBackgroundColor === 'transparent' ? 'transparent' : emailSettings.contentBackgroundColor
+                            ...getTemplateStyle()
                           }}
                         >
                           <div className="preview-subject mb-4">
@@ -463,6 +495,12 @@ const Editor = () => {
         onInsert={handleInsertLink}
         initialText={handleGetSelectedText()}
       />
+
+      <BackgroundImageSelector
+        isOpen={showBackgroundSelector}
+        onClose={() => setShowBackgroundSelector(false)}
+        onSelect={handleSetBackgroundImage}
+      />
       
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
@@ -475,7 +513,7 @@ const Editor = () => {
             style={{
               maxWidth: `${emailSettings.contentWidth}px`,
               margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
-              backgroundColor: emailSettings.contentBackgroundColor === 'transparent' ? 'transparent' : emailSettings.contentBackgroundColor
+              ...getTemplateStyle()
             }}
           >
             <div className="preview-subject mb-4">

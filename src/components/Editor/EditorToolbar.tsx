@@ -12,7 +12,8 @@ import {
   AlignJustify, 
   Link, 
   ImagePlus, 
-  Palette 
+  Palette,
+  Image
 } from "lucide-react";
 import { 
   Menubar, 
@@ -34,6 +35,7 @@ interface EditorToolbarProps {
   onLink: () => void;
   onImage: () => void;
   onColor: (color: string) => void;
+  onBackgroundImage?: () => void;
   activeFormats: {
     bold: boolean;
     italic: boolean;
@@ -52,6 +54,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onLink,
   onImage,
   onColor,
+  onBackgroundImage,
   activeFormats,
 }) => {
   const colorOptions = [
@@ -158,6 +161,12 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <ToolbarButton tooltip="Insert Image" onClick={onImage}>
           <ImagePlus size={18} />
         </ToolbarButton>
+
+        {onBackgroundImage && (
+          <ToolbarButton tooltip="Set Background Image" onClick={onBackgroundImage}>
+            <Image size={18} />
+          </ToolbarButton>
+        )}
 
         <div className="h-6 w-px bg-gray-200 mx-1"></div>
 
