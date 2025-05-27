@@ -142,6 +142,11 @@ const Editor = () => {
 
   const handleColor = (color: string) => {
     document.execCommand("foreColor", false, color);
+    // Force update to ensure the color change is reflected
+    if (document.activeElement) {
+      const event = new Event('input', { bubbles: true });
+      document.activeElement.dispatchEvent(event);
+    }
   };
 
   // Content block handler
@@ -427,6 +432,7 @@ const Editor = () => {
                           <div 
                             className="content-preview mb-8"
                             dangerouslySetInnerHTML={{ __html: content }}
+                            style={{ color: 'inherit' }}
                           />
                           <hr className="my-6" />
                           <div 
@@ -478,6 +484,7 @@ const Editor = () => {
             <div
               className="content-preview mb-8"
               dangerouslySetInnerHTML={{ __html: content }}
+              style={{ color: 'inherit' }}
             />
             <hr className="my-6" />
             <div

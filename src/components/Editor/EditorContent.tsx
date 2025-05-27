@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 
 interface EditorContentProps {
@@ -30,7 +29,9 @@ const EditorContent: React.FC<EditorContentProps> = ({
   }, [onSelectionChange]);
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-    onChange(e.currentTarget.innerHTML);
+    // Ensure color and other formatting is preserved
+    const content = e.currentTarget.innerHTML;
+    onChange(content);
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
@@ -41,6 +42,11 @@ const EditorContent: React.FC<EditorContentProps> = ({
     
     // Insert at cursor position
     document.execCommand('insertText', false, text);
+    
+    // Update content after paste
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
   };
 
   // Initialize editor with content
@@ -283,6 +289,11 @@ const EditorContent: React.FC<EditorContentProps> = ({
       onInput={handleInput}
       onBlur={handleInput}
       onPaste={handlePaste}
+      suppressContentEditableWarning={true}
+      style={{ 
+        whiteSpace: 'pre-wrap',
+        color: 'inherit'
+      }}
     />
   );
 };
