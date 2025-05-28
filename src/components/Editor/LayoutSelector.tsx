@@ -10,22 +10,41 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout }) => {
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
 
   const templateColors = [
-    { name: "Light Purple", value: "#e9d5ff" },
-    { name: "Light Blue", value: "#dbeafe" },
-    { name: "Light Green", value: "#d1fae5" },
-    { name: "Light Pink", value: "#fce7f3" },
-    { name: "Light Orange", value: "#fed7aa" },
-    { name: "Light Yellow", value: "#fef3c7" },
-    { name: "Light Teal", value: "#ccfbf1" },
-    { name: "Light Indigo", value: "#e0e7ff" },
-    { name: "Light Red", value: "#fee2e2" },
-    { name: "Light Gray", value: "#f3f4f6" },
-    { name: "Light Emerald", value: "#d1fae5" },
-    { name: "Light Cyan", value: "#cffafe" },
-    { name: "Light Rose", value: "#ffe4e6" },
-    { name: "Light Violet", value: "#ede9fe" },
-    { name: "Light Amber", value: "#fef3c7" },
-    { name: "Light Lime", value: "#ecfccb" }
+    // Dark to Light Purple Gradient
+    { name: "Deep Purple", value: "#4C1D95" },
+    { name: "Medium Purple", value: "#7C3AED" },
+    { name: "Light Purple", value: "#A78BFA" },
+    { name: "Pale Purple", value: "#E9D5FF" },
+    
+    // Dark to Light Blue Gradient
+    { name: "Deep Blue", value: "#1E3A8A" },
+    { name: "Medium Blue", value: "#3B82F6" },
+    { name: "Light Blue", value: "#93C5FD" },
+    { name: "Pale Blue", value: "#DBEAFE" },
+    
+    // Dark to Light Green Gradient
+    { name: "Deep Green", value: "#14532D" },
+    { name: "Medium Green", value: "#16A34A" },
+    { name: "Light Green", value: "#86EFAC" },
+    { name: "Pale Green", value: "#D1FAE5" },
+    
+    // Dark to Light Pink Gradient
+    { name: "Deep Pink", value: "#BE185D" },
+    { name: "Medium Pink", value: "#EC4899" },
+    { name: "Light Pink", value: "#F9A8D4" },
+    { name: "Pale Pink", value: "#FCE7F3" },
+    
+    // Dark to Light Orange Gradient
+    { name: "Deep Orange", value: "#C2410C" },
+    { name: "Medium Orange", value: "#F97316" },
+    { name: "Light Orange", value: "#FDBA74" },
+    { name: "Pale Orange", value: "#FED7AA" },
+    
+    // Dark to Light Teal Gradient
+    { name: "Deep Teal", value: "#134E4A" },
+    { name: "Medium Teal", value: "#0F766E" },
+    { name: "Light Teal", value: "#5EEAD4" },
+    { name: "Pale Teal", value: "#CCFBF1" },
   ];
 
   const layouts = [
@@ -175,7 +194,7 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout }) => {
     setSelectedColumn(null);
   };
 
-  const handleLayoutSelect = (layoutId: string) => {
+  const handleLayoutDragStart = (e: React.DragEvent, layoutId: string) => {
     let layoutHtml = '';
     
     switch(layoutId) {
@@ -198,10 +217,18 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout }) => {
         layoutHtml = '<div class="draggable-row" style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;" data-column-id="default"><p>Content area. Click to edit.</p></div>';
     }
     
+    e.dataTransfer.setData('text/html', layoutHtml);
+    e.dataTransfer.setData('text/plain', `layout-${layoutId}`);
+    e.dataTransfer.effectAllowed = 'copy';
+  };
+
+  const handleColorDragStart = (e: React.DragEvent, color: string) => {
+    e.dataTransfer.setData('text/plain', `color-${color}`);
+    e.dataTransfer.effectAllowed = 'copy';
+  };
+
+  const handleLayoutSelect = (layoutId: string) => {
     onSelectLayout(layoutId);
-    
-    // Insert the HTML using execCommand
-    document.execCommand("insertHTML", false, layoutHtml);
   };
 
   return (
@@ -212,22 +239,25 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout }) => {
           {templateColors.map((color) => (
             <button
               key={color.value}
-              className="h-8 w-8 rounded-full border border-gray-200 hover:scale-110 transition-transform cursor-pointer"
+              className="h-8 w-8 rounded-full border border-gray-200 hover:scale-110 transition-transform cursor-pointer relative group"
               style={{ backgroundColor: color.value }}
               onClick={() => handleColorSelect(color.value)}
-              title={`${color.name} - ${selectedColumn ? 'Click to apply to selected column' : 'Select a column first'}`}
-              disabled={!selectedColumn}
-            />
+              onDragStart={(e) => handleColorDragStart(e, color.value)}
+              draggable
+              title={`${color.name} - ${selectedColumn ? 'Click to apply to selected column or drag to editor' : 'Select a column first or drag to editor'}`}
+            >
+              <div className="absolute inset-0 rounded-full ring-2 ring-blue-500 ring-opacity-0 group-hover:ring-opacity-50 transition-all duration-200" />
+            </button>
           ))}
         </div>
         {selectedColumn && (
           <p className="text-xs text-blue-600 mb-2">
-            Selected: {selectedColumn.replace(/-/g, ' ')} - Choose a color above
+            Selected: {selectedColumn.replace(/-/g, ' ')} - Choose a color above or drag a color to the editor
           </p>
         )}
         {!selectedColumn && (
           <p className="text-xs text-gray-500 mb-2">
-            Click on a column in the layouts below to select it, then choose a color
+            Click on a column in the layouts below to select it, then choose a color, or drag colors directly to the editor
           </p>
         )}
       </div>
@@ -242,8 +272,10 @@ const LayoutSelector: React.FC<LayoutSelectorProps> = ({ onSelectLayout }) => {
           {layouts.map((layout) => (
             <Card 
               key={layout.id} 
-              className="cursor-pointer hover:shadow-md transition-shadow"
+              className="cursor-move hover:shadow-md transition-shadow border-2 border-dashed border-transparent hover:border-blue-300"
               onClick={() => handleLayoutSelect(layout.id)}
+              draggable
+              onDragStart={(e) => handleLayoutDragStart(e, layout.id)}
             >
               <CardContent className="p-3">
                 {layout.preview}
