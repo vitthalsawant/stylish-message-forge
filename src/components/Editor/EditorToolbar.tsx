@@ -23,6 +23,11 @@ import {
   MenubarSeparator, 
   MenubarTrigger 
 } from "@/components/ui/menubar";
+import { 
+  Popover, 
+  PopoverContent, 
+  PopoverTrigger 
+} from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -67,6 +72,18 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
     { name: "Teal", value: "#14b8a6" },
     { name: "Gray", value: "#6b7280" },
     { name: "Black", value: "#000000" },
+    { name: "Yellow", value: "#eab308" },
+    { name: "Indigo", value: "#6366f1" },
+    { name: "Emerald", value: "#059669" },
+  ];
+
+  const templateColors = [
+    { name: "Light Purple", value: "#e9d5ff" },
+    { name: "Light Blue", value: "#dbeafe" },
+    { name: "Light Green", value: "#d1fae5" },
+    { name: "Light Pink", value: "#fce7f3" },
+    { name: "Light Orange", value: "#fed7aa" },
+    { name: "Light Yellow", value: "#fef3c7" },
   ];
 
   return (
@@ -170,26 +187,99 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
         <div className="h-6 w-px bg-gray-200 mx-1"></div>
 
-        <Menubar className="border-none p-0 h-auto bg-transparent">
-          <MenubarMenu>
-            <MenubarTrigger className="p-0 h-8 w-8 flex items-center justify-center">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
               <Palette size={18} />
-            </MenubarTrigger>
-            <MenubarContent>
-              <div className="grid grid-cols-3 gap-1 p-1">
-                {colorOptions.map((color) => (
-                  <div
-                    key={color.value}
-                    className="h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center"
-                    style={{ backgroundColor: color.value }}
-                    onClick={() => onColor(color.value)}
-                    title={color.name}
-                  />
-                ))}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 p-4">
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-sm font-medium mb-2">Text Colors</h4>
+                <div className="grid grid-cols-6 gap-2">
+                  {colorOptions.map((color) => (
+                    <button
+                      key={color.value}
+                      className="h-8 w-8 rounded-full border border-gray-200 hover:scale-110 transition-transform cursor-pointer"
+                      style={{ backgroundColor: color.value }}
+                      onClick={() => onColor(color.value)}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
               </div>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Template Colors</h4>
+                <div className="grid grid-cols-6 gap-2">
+                  {templateColors.map((color) => (
+                    <button
+                      key={color.value}
+                      className="h-8 w-8 rounded-full border border-gray-200 hover:scale-110 transition-transform cursor-pointer"
+                      style={{ backgroundColor: color.value }}
+                      onClick={() => onColor(color.value)}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium mb-2">Quick Colors</h4>
+                <div className="flex gap-2">
+                  <button
+                    className="h-8 w-16 rounded border border-gray-200 hover:scale-105 transition-transform cursor-pointer bg-black"
+                    onClick={() => onColor("#000000")}
+                    title="Black"
+                  />
+                  <button
+                    className="h-8 w-16 rounded border border-gray-200 hover:scale-105 transition-transform cursor-pointer bg-white"
+                    onClick={() => onColor("#ffffff")}
+                    title="White"
+                  />
+                  <button
+                    className="h-8 w-16 rounded border border-gray-200 hover:scale-105 transition-transform cursor-pointer bg-gray-500"
+                    onClick={() => onColor("#6b7280")}
+                    title="Gray"
+                  />
+                </div>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Quick access color buttons */}
+        <div className="flex items-center gap-1 ml-2">
+          <button
+            className="h-6 w-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
+            style={{ backgroundColor: "#ef4444" }}
+            onClick={() => onColor("#ef4444")}
+            title="Red"
+          />
+          <button
+            className="h-6 w-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
+            style={{ backgroundColor: "#3b82f6" }}
+            onClick={() => onColor("#3b82f6")}
+            title="Blue"
+          />
+          <button
+            className="h-6 w-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
+            style={{ backgroundColor: "#10b981" }}
+            onClick={() => onColor("#10b981")}
+            title="Green"
+          />
+          <button
+            className="h-6 w-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
+            style={{ backgroundColor: "#8b5cf6" }}
+            onClick={() => onColor("#8b5cf6")}
+            title="Purple"
+          />
+        </div>
       </div>
     </TooltipProvider>
   );
