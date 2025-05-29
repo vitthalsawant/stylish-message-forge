@@ -64,6 +64,233 @@ const EditorContent: React.FC<EditorContentProps> = ({
     }
   }, [content, isInitialized]);
 
+  // Add global script functions for handling uploads
+  useEffect(() => {
+    // Define global functions for handling file uploads
+    (window as any).handleImageUpload = function(input: HTMLInputElement) {
+      const file = input.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = input.closest('.image-block');
+          if (container) {
+            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+            const imageDisplay = container.querySelector('.image-display') as HTMLElement;
+            const img = imageDisplay?.querySelector('img') as HTMLImageElement;
+            
+            if (img && uploadArea && imageDisplay) {
+              img.src = e.target?.result as string;
+              uploadArea.style.display = 'none';
+              imageDisplay.style.display = 'block';
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    (window as any).handleImageURL = function(input: HTMLInputElement) {
+      const url = input.value;
+      if (url) {
+        const container = input.closest('.image-block');
+        if (container) {
+          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+          const imageDisplay = container.querySelector('.image-display') as HTMLElement;
+          const img = imageDisplay?.querySelector('img') as HTMLImageElement;
+          
+          if (img && uploadArea && imageDisplay) {
+            img.src = url;
+            uploadArea.style.display = 'none';
+            imageDisplay.style.display = 'block';
+          }
+        }
+      }
+    };
+
+    (window as any).handleVideoUpload = function(input: HTMLInputElement) {
+      const file = input.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = input.closest('.video-block');
+          if (container) {
+            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+            const videoDisplay = container.querySelector('.video-display') as HTMLElement;
+            const video = videoDisplay?.querySelector('video') as HTMLVideoElement;
+            
+            if (video && uploadArea && videoDisplay) {
+              video.src = e.target?.result as string;
+              uploadArea.style.display = 'none';
+              videoDisplay.style.display = 'block';
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    (window as any).handleVideoEmbed = function(textarea: HTMLTextAreaElement) {
+      const embedCode = textarea.value;
+      if (embedCode) {
+        const container = textarea.closest('.video-block');
+        if (container) {
+          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+          const videoDisplay = container.querySelector('.video-display') as HTMLElement;
+          
+          if (uploadArea && videoDisplay) {
+            videoDisplay.innerHTML = embedCode + '<div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add video caption</div>';
+            uploadArea.style.display = 'none';
+            videoDisplay.style.display = 'block';
+          }
+        }
+      }
+    };
+
+    (window as any).handleIconUpload = function(input: HTMLInputElement) {
+      const file = input.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = input.closest('.icon-block');
+          if (container) {
+            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+            const iconDisplay = container.querySelector('.icon-display') as HTMLElement;
+            const img = iconDisplay?.querySelector('img') as HTMLImageElement;
+            
+            if (img && uploadArea && iconDisplay) {
+              img.src = e.target?.result as string;
+              uploadArea.style.display = 'none';
+              iconDisplay.style.display = 'block';
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    (window as any).handleIconURL = function(input: HTMLInputElement) {
+      const url = input.value;
+      if (url) {
+        const container = input.closest('.icon-block');
+        if (container) {
+          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+          const iconDisplay = container.querySelector('.icon-display') as HTMLElement;
+          const img = iconDisplay?.querySelector('img') as HTMLImageElement;
+          
+          if (img && uploadArea && iconDisplay) {
+            img.src = url;
+            uploadArea.style.display = 'none';
+            iconDisplay.style.display = 'block';
+          }
+        }
+      }
+    };
+
+    (window as any).handleStickerUpload = function(input: HTMLInputElement) {
+      const file = input.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = input.closest('.sticker-block');
+          if (container) {
+            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+            const stickerDisplay = container.querySelector('.sticker-display') as HTMLElement;
+            const img = stickerDisplay?.querySelector('img') as HTMLImageElement;
+            
+            if (img && uploadArea && stickerDisplay) {
+              img.src = e.target?.result as string;
+              uploadArea.style.display = 'none';
+              stickerDisplay.style.display = 'block';
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    (window as any).handleStickerURL = function(input: HTMLInputElement) {
+      const url = input.value;
+      if (url) {
+        const container = input.closest('.sticker-block');
+        if (container) {
+          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+          const stickerDisplay = container.querySelector('.sticker-display') as HTMLElement;
+          const img = stickerDisplay?.querySelector('img') as HTMLImageElement;
+          
+          if (img && uploadArea && stickerDisplay) {
+            img.src = url;
+            uploadArea.style.display = 'none';
+            stickerDisplay.style.display = 'block';
+          }
+        }
+      }
+    };
+
+    (window as any).handleGifUpload = function(input: HTMLInputElement) {
+      const file = input.files?.[0];
+      if (file && file.type === 'image/gif') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = input.closest('.gif-block');
+          if (container) {
+            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+            const gifDisplay = container.querySelector('.gif-display') as HTMLElement;
+            const img = gifDisplay?.querySelector('img') as HTMLImageElement;
+            
+            if (img && uploadArea && gifDisplay) {
+              img.src = e.target?.result as string;
+              uploadArea.style.display = 'none';
+              gifDisplay.style.display = 'block';
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      } else if (file) {
+        alert('Please select a valid GIF file.');
+      }
+    };
+
+    (window as any).handleGifURL = function(input: HTMLInputElement) {
+      const url = input.value;
+      if (url && url.toLowerCase().includes('.gif')) {
+        const container = input.closest('.gif-block');
+        if (container) {
+          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
+          const gifDisplay = container.querySelector('.gif-display') as HTMLElement;
+          const img = gifDisplay?.querySelector('img') as HTMLImageElement;
+          
+          if (img && uploadArea && gifDisplay) {
+            img.src = url;
+            uploadArea.style.display = 'none';
+            gifDisplay.style.display = 'block';
+          }
+        }
+      }
+    };
+
+    (window as any).adjustSpacing = function(element: HTMLElement) {
+      const newHeight = prompt('Enter height in pixels:', '60');
+      if (newHeight) {
+        element.style.height = newHeight + 'px';
+        element.innerHTML = `Click to adjust spacing (${newHeight}px)`;
+      }
+    };
+
+    (window as any).editImageSize = function(img: HTMLImageElement) {
+      const newWidth = prompt('Enter width (e.g., 300px, 50%, auto):', img.style.width || 'auto');
+      if (newWidth) {
+        img.style.width = newWidth;
+      }
+    };
+
+    (window as any).editButtonLink = function(button: HTMLAnchorElement) {
+      const newLink = prompt('Enter URL:', button.href);
+      if (newLink) {
+        button.href = newLink;
+      }
+    };
+  }, []);
+
   // Get the position for drop indicator
   const getDropPosition = (e: DragEvent, targetElement: HTMLElement) => {
     const rect = targetElement.getBoundingClientRect();
