@@ -74,14 +74,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.image-block');
           if (container) {
-            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-            const imageDisplay = container.querySelector('.image-display') as HTMLElement;
-            const img = imageDisplay?.querySelector('img') as HTMLImageElement;
+            // Replace the entire upload interface with the image
+            container.innerHTML = `
+              <img src="${e.target?.result}" alt="Uploaded image" style="max-width: 100%; height: auto; border-radius: 8px; cursor: pointer;" onclick="editImageSize(this)" />
+              <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
+            `;
             
-            if (img && uploadArea && imageDisplay) {
-              img.src = e.target?.result as string;
-              uploadArea.style.display = 'none';
-              imageDisplay.style.display = 'block';
+            // Trigger content update
+            const editor = document.querySelector('.editor-content') as HTMLElement;
+            if (editor) {
+              const event = new Event('input', { bubbles: true });
+              editor.dispatchEvent(event);
             }
           }
         };
@@ -94,14 +97,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url) {
         const container = input.closest('.image-block');
         if (container) {
-          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-          const imageDisplay = container.querySelector('.image-display') as HTMLElement;
-          const img = imageDisplay?.querySelector('img') as HTMLImageElement;
+          // Replace the entire upload interface with the image
+          container.innerHTML = `
+            <img src="${url}" alt="Image from URL" style="max-width: 100%; height: auto; border-radius: 8px; cursor: pointer;" onclick="editImageSize(this)" />
+            <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
+          `;
           
-          if (img && uploadArea && imageDisplay) {
-            img.src = url;
-            uploadArea.style.display = 'none';
-            imageDisplay.style.display = 'block';
+          // Trigger content update
+          const editor = document.querySelector('.editor-content') as HTMLElement;
+          if (editor) {
+            const event = new Event('input', { bubbles: true });
+            editor.dispatchEvent(event);
           }
         }
       }
@@ -114,14 +120,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.video-block');
           if (container) {
-            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-            const videoDisplay = container.querySelector('.video-display') as HTMLElement;
-            const video = videoDisplay?.querySelector('video') as HTMLVideoElement;
+            // Replace the entire upload interface with the video
+            container.innerHTML = `
+              <video controls style="max-width: 100%; height: auto; border-radius: 8px;">
+                <source src="${e.target?.result}" type="${file.type}">
+                Your browser does not support the video tag.
+              </video>
+              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
+            `;
             
-            if (video && uploadArea && videoDisplay) {
-              video.src = e.target?.result as string;
-              uploadArea.style.display = 'none';
-              videoDisplay.style.display = 'block';
+            // Trigger content update
+            const editor = document.querySelector('.editor-content') as HTMLElement;
+            if (editor) {
+              const event = new Event('input', { bubbles: true });
+              editor.dispatchEvent(event);
             }
           }
         };
@@ -134,13 +146,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (embedCode) {
         const container = textarea.closest('.video-block');
         if (container) {
-          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-          const videoDisplay = container.querySelector('.video-display') as HTMLElement;
+          // Replace the entire upload interface with the embed
+          container.innerHTML = `
+            ${embedCode}
+            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
+          `;
           
-          if (uploadArea && videoDisplay) {
-            videoDisplay.innerHTML = embedCode + '<div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add video caption</div>';
-            uploadArea.style.display = 'none';
-            videoDisplay.style.display = 'block';
+          // Trigger content update
+          const editor = document.querySelector('.editor-content') as HTMLElement;
+          if (editor) {
+            const event = new Event('input', { bubbles: true });
+            editor.dispatchEvent(event);
           }
         }
       }
@@ -153,14 +169,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.icon-block');
           if (container) {
-            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-            const iconDisplay = container.querySelector('.icon-display') as HTMLElement;
-            const img = iconDisplay?.querySelector('img') as HTMLImageElement;
+            // Replace the entire upload interface with the icon
+            container.innerHTML = `
+              <img src="${e.target?.result}" alt="Uploaded icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
+              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit icon label</div>
+            `;
             
-            if (img && uploadArea && iconDisplay) {
-              img.src = e.target?.result as string;
-              uploadArea.style.display = 'none';
-              iconDisplay.style.display = 'block';
+            // Trigger content update
+            const editor = document.querySelector('.editor-content') as HTMLElement;
+            if (editor) {
+              const event = new Event('input', { bubbles: true });
+              editor.dispatchEvent(event);
             }
           }
         };
@@ -173,14 +192,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url) {
         const container = input.closest('.icon-block');
         if (container) {
-          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-          const iconDisplay = container.querySelector('.icon-display') as HTMLElement;
-          const img = iconDisplay?.querySelector('img') as HTMLImageElement;
+          // Replace the entire upload interface with the icon
+          container.innerHTML = `
+            <img src="${url}" alt="Icon from URL" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
+            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit icon label</div>
+          `;
           
-          if (img && uploadArea && iconDisplay) {
-            img.src = url;
-            uploadArea.style.display = 'none';
-            iconDisplay.style.display = 'block';
+          // Trigger content update
+          const editor = document.querySelector('.editor-content') as HTMLElement;
+          if (editor) {
+            const event = new Event('input', { bubbles: true });
+            editor.dispatchEvent(event);
           }
         }
       }
@@ -193,14 +215,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.sticker-block');
           if (container) {
-            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-            const stickerDisplay = container.querySelector('.sticker-display') as HTMLElement;
-            const img = stickerDisplay?.querySelector('img') as HTMLImageElement;
+            // Replace the entire upload interface with the sticker
+            container.innerHTML = `
+              <img src="${e.target?.result}" alt="Uploaded sticker" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
+              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit sticker caption</div>
+            `;
             
-            if (img && uploadArea && stickerDisplay) {
-              img.src = e.target?.result as string;
-              uploadArea.style.display = 'none';
-              stickerDisplay.style.display = 'block';
+            // Trigger content update
+            const editor = document.querySelector('.editor-content') as HTMLElement;
+            if (editor) {
+              const event = new Event('input', { bubbles: true });
+              editor.dispatchEvent(event);
             }
           }
         };
@@ -213,14 +238,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url) {
         const container = input.closest('.sticker-block');
         if (container) {
-          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-          const stickerDisplay = container.querySelector('.sticker-display') as HTMLElement;
-          const img = stickerDisplay?.querySelector('img') as HTMLImageElement;
+          // Replace the entire upload interface with the sticker
+          container.innerHTML = `
+            <img src="${url}" alt="Sticker from URL" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
+            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit sticker caption</div>
+          `;
           
-          if (img && uploadArea && stickerDisplay) {
-            img.src = url;
-            uploadArea.style.display = 'none';
-            stickerDisplay.style.display = 'block';
+          // Trigger content update
+          const editor = document.querySelector('.editor-content') as HTMLElement;
+          if (editor) {
+            const event = new Event('input', { bubbles: true });
+            editor.dispatchEvent(event);
           }
         }
       }
@@ -233,14 +261,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.gif-block');
           if (container) {
-            const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-            const gifDisplay = container.querySelector('.gif-display') as HTMLElement;
-            const img = gifDisplay?.querySelector('img') as HTMLImageElement;
+            // Replace the entire upload interface with the GIF
+            container.innerHTML = `
+              <img src="${e.target?.result}" alt="Uploaded GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
+              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add GIF caption</div>
+            `;
             
-            if (img && uploadArea && gifDisplay) {
-              img.src = e.target?.result as string;
-              uploadArea.style.display = 'none';
-              gifDisplay.style.display = 'block';
+            // Trigger content update
+            const editor = document.querySelector('.editor-content') as HTMLElement;
+            if (editor) {
+              const event = new Event('input', { bubbles: true });
+              editor.dispatchEvent(event);
             }
           }
         };
@@ -255,14 +286,17 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url && url.toLowerCase().includes('.gif')) {
         const container = input.closest('.gif-block');
         if (container) {
-          const uploadArea = container.querySelector('.upload-area') as HTMLElement;
-          const gifDisplay = container.querySelector('.gif-display') as HTMLElement;
-          const img = gifDisplay?.querySelector('img') as HTMLImageElement;
+          // Replace the entire upload interface with the GIF
+          container.innerHTML = `
+            <img src="${url}" alt="GIF from URL" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
+            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add GIF caption</div>
+          `;
           
-          if (img && uploadArea && gifDisplay) {
-            img.src = url;
-            uploadArea.style.display = 'none';
-            gifDisplay.style.display = 'block';
+          // Trigger content update
+          const editor = document.querySelector('.editor-content') as HTMLElement;
+          if (editor) {
+            const event = new Event('input', { bubbles: true });
+            editor.dispatchEvent(event);
           }
         }
       }
