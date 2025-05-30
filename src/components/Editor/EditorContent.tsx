@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 interface EditorContentProps {
   content: string;
@@ -74,10 +75,19 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.image-block');
           if (container) {
-            // Replace the entire upload interface with the image
+            // Replace the entire upload interface with the image in a resizable panel
             container.innerHTML = `
-              <img src="${e.target?.result}" alt="Uploaded image" style="max-width: 100%; height: auto; border-radius: 8px; cursor: pointer;" onclick="editImageSize(this)" />
-              <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
+              <div class="resizable-block-wrapper">
+                <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px;">
+                    <img src="${e.target?.result}" alt="Uploaded image" style="max-width: 100%; height: auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
+                    <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  </div>
+                </div>
+              </div>
             `;
             
             // Trigger content update
@@ -97,10 +107,19 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url) {
         const container = input.closest('.image-block');
         if (container) {
-          // Replace the entire upload interface with the image
+          // Replace the entire upload interface with the image in a resizable panel
           container.innerHTML = `
-            <img src="${url}" alt="Image from URL" style="max-width: 100%; height: auto; border-radius: 8px; cursor: pointer;" onclick="editImageSize(this)" />
-            <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
+            <div class="resizable-block-wrapper">
+              <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px;">
+                  <img src="${url}" alt="Image from URL" style="max-width: 100%; height: auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
+                  <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                </div>
+              </div>
+            </div>
           `;
           
           // Trigger content update
@@ -120,16 +139,23 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.video-block');
           if (container) {
-            // Replace the entire upload interface with the video
             container.innerHTML = `
-              <video controls style="max-width: 100%; height: auto; border-radius: 8px;">
-                <source src="${e.target?.result}" type="${file.type}">
-                Your browser does not support the video tag.
-              </video>
-              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
+              <div class="resizable-block-wrapper">
+                <div class="resizable-panel-group" style="height: auto; min-height: 250px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px;">
+                    <video controls style="max-width: 100%; height: auto; border-radius: 6px;">
+                      <source src="${e.target?.result}" type="${file.type}">
+                      Your browser does not support the video tag.
+                    </video>
+                    <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  </div>
+                </div>
+              </div>
             `;
             
-            // Trigger content update
             const editor = document.querySelector('.editor-content') as HTMLElement;
             if (editor) {
               const event = new Event('input', { bubbles: true });
@@ -146,13 +172,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (embedCode) {
         const container = textarea.closest('.video-block');
         if (container) {
-          // Replace the entire upload interface with the embed
           container.innerHTML = `
-            ${embedCode}
-            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
+            <div class="resizable-block-wrapper">
+              <div class="resizable-panel-group" style="height: auto; min-height: 250px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px;">
+                  ${embedCode}
+                  <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                </div>
+              </div>
+            </div>
           `;
           
-          // Trigger content update
           const editor = document.querySelector('.editor-content') as HTMLElement;
           if (editor) {
             const event = new Event('input', { bubbles: true });
@@ -169,13 +202,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.icon-block');
           if (container) {
-            // Replace the entire upload interface with the icon
             container.innerHTML = `
-              <img src="${e.target?.result}" alt="Uploaded icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
-              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit icon label</div>
+              <div class="resizable-block-wrapper">
+                <div class="resizable-panel-group" style="height: auto; min-height: 120px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                    <img src="${e.target?.result}" alt="Uploaded icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
+                    <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  </div>
+                </div>
+              </div>
             `;
             
-            // Trigger content update
             const editor = document.querySelector('.editor-content') as HTMLElement;
             if (editor) {
               const event = new Event('input', { bubbles: true });
@@ -192,13 +232,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url) {
         const container = input.closest('.icon-block');
         if (container) {
-          // Replace the entire upload interface with the icon
           container.innerHTML = `
-            <img src="${url}" alt="Icon from URL" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
-            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit icon label</div>
+            <div class="resizable-block-wrapper">
+              <div class="resizable-panel-group" style="height: auto; min-height: 120px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                  <img src="${url}" alt="Icon from URL" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
+                  <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                </div>
+              </div>
+            </div>
           `;
           
-          // Trigger content update
           const editor = document.querySelector('.editor-content') as HTMLElement;
           if (editor) {
             const event = new Event('input', { bubbles: true });
@@ -215,13 +262,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.sticker-block');
           if (container) {
-            // Replace the entire upload interface with the sticker
             container.innerHTML = `
-              <img src="${e.target?.result}" alt="Uploaded sticker" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
-              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit sticker caption</div>
+              <div class="resizable-block-wrapper">
+                <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                    <img src="${e.target?.result}" alt="Uploaded sticker" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
+                    <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  </div>
+                </div>
+              </div>
             `;
             
-            // Trigger content update
             const editor = document.querySelector('.editor-content') as HTMLElement;
             if (editor) {
               const event = new Event('input', { bubbles: true });
@@ -238,13 +292,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url) {
         const container = input.closest('.sticker-block');
         if (container) {
-          // Replace the entire upload interface with the sticker
           container.innerHTML = `
-            <img src="${url}" alt="Sticker from URL" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
-            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to edit sticker caption</div>
+            <div class="resizable-block-wrapper">
+              <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                  <img src="${url}" alt="Sticker from URL" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
+                  <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                </div>
+              </div>
+            </div>
           `;
           
-          // Trigger content update
           const editor = document.querySelector('.editor-content') as HTMLElement;
           if (editor) {
             const event = new Event('input', { bubbles: true });
@@ -261,13 +322,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
         reader.onload = function(e) {
           const container = input.closest('.gif-block');
           if (container) {
-            // Replace the entire upload interface with the GIF
             container.innerHTML = `
-              <img src="${e.target?.result}" alt="Uploaded GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
-              <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add GIF caption</div>
+              <div class="resizable-block-wrapper">
+                <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                    <img src="${e.target?.result}" alt="Uploaded GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
+                    <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  </div>
+                </div>
+              </div>
             `;
             
-            // Trigger content update
             const editor = document.querySelector('.editor-content') as HTMLElement;
             if (editor) {
               const event = new Event('input', { bubbles: true });
@@ -286,13 +354,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (url && url.toLowerCase().includes('.gif')) {
         const container = input.closest('.gif-block');
         if (container) {
-          // Replace the entire upload interface with the GIF
           container.innerHTML = `
-            <img src="${url}" alt="GIF from URL" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
-            <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add GIF caption</div>
+            <div class="resizable-block-wrapper">
+              <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                  <img src="${url}" alt="GIF from URL" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
+                  <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                </div>
+              </div>
+            </div>
           `;
           
-          // Trigger content update
           const editor = document.querySelector('.editor-content') as HTMLElement;
           if (editor) {
             const event = new Event('input', { bubbles: true });
@@ -323,6 +398,75 @@ const EditorContent: React.FC<EditorContentProps> = ({
         button.href = newLink;
       }
     };
+
+    // Add resize functionality
+    (window as any).initializeResizeHandles = function() {
+      const resizePanels = document.querySelectorAll('.resizable-panel');
+      
+      resizePanels.forEach((panel) => {
+        const resizeHandles = panel.querySelectorAll('.resize-handle');
+        
+        resizeHandles.forEach((handle) => {
+          let isResizing = false;
+          let startX = 0;
+          let startY = 0;
+          let startWidth = 0;
+          let startHeight = 0;
+          
+          handle.addEventListener('mousedown', (e: Event) => {
+            e.preventDefault();
+            e.stopPropagation();
+            isResizing = true;
+            
+            const mouseEvent = e as MouseEvent;
+            startX = mouseEvent.clientX;
+            startY = mouseEvent.clientY;
+            
+            const rect = panel.getBoundingClientRect();
+            startWidth = rect.width;
+            startHeight = rect.height;
+            
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+          });
+          
+          function handleMouseMove(e: MouseEvent) {
+            if (!isResizing) return;
+            
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            
+            if (handle.classList.contains('resize-handle-right') || handle.classList.contains('resize-handle-corner')) {
+              const newWidth = Math.max(100, startWidth + deltaX);
+              (panel as HTMLElement).style.width = newWidth + 'px';
+            }
+            
+            if (handle.classList.contains('resize-handle-bottom') || handle.classList.contains('resize-handle-corner')) {
+              const newHeight = Math.max(50, startHeight + deltaY);
+              (panel as HTMLElement).style.height = newHeight + 'px';
+            }
+          }
+          
+          function handleMouseUp() {
+            isResizing = false;
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            
+            // Trigger content update
+            const editor = document.querySelector('.editor-content') as HTMLElement;
+            if (editor) {
+              const event = new Event('input', { bubbles: true });
+              editor.dispatchEvent(event);
+            }
+          }
+        });
+      });
+    };
+
+    // Initialize resize handles for existing content
+    setTimeout(() => {
+      (window as any).initializeResizeHandles();
+    }, 100);
   }, []);
 
   // Get the position for drop indicator
@@ -598,6 +742,11 @@ const EditorContent: React.FC<EditorContentProps> = ({
       document.querySelectorAll('.drag-over').forEach(el => {
         el.classList.remove('drag-over');
       });
+
+      // Initialize resize handles for new content
+      setTimeout(() => {
+        (window as any).initializeResizeHandles();
+      }, 100);
     };
     
     editor.addEventListener('dragover', handleDragOver);
@@ -607,6 +756,10 @@ const EditorContent: React.FC<EditorContentProps> = ({
     // Initial setup of existing rows
     const observer = new MutationObserver(() => {
       setupDraggableElements();
+      // Re-initialize resize handles when content changes
+      setTimeout(() => {
+        (window as any).initializeResizeHandles();
+      }, 100);
     });
     
     observer.observe(editor, { childList: true, subtree: true });
@@ -650,7 +803,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
         />
       )}
       
-      {/* Custom styles for drag effects using CSS classes */}
+      {/* Custom styles for drag effects and resize handles */}
       <style>
         {`
           .dragging {
@@ -678,6 +831,36 @@ const EditorContent: React.FC<EditorContentProps> = ({
           .drop-zone-active {
             background-color: rgba(59, 130, 246, 0.05) !important;
             border: 2px dashed #3b82f6 !important;
+          }
+
+          .resize-handle {
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.2s;
+          }
+
+          .resizable-panel:hover .resize-handle {
+            opacity: 1;
+          }
+
+          .resize-handle:hover {
+            opacity: 1 !important;
+            background: #1d4ed8 !important;
+          }
+
+          .resizable-block-wrapper {
+            position: relative;
+            margin: 10px 0;
+          }
+
+          .resizable-panel-group {
+            position: relative;
+          }
+
+          .resizable-panel {
+            min-width: 100px;
+            min-height: 50px;
+            position: relative;
           }
         `}
       </style>
