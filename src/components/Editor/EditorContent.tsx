@@ -79,12 +79,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px;">
-                    <img src="${e.target?.result}" alt="Uploaded image" style="max-width: 100%; height: auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
-                    <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
-                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 400px; height: 300px;">
+                    <img src="${e.target?.result}" alt="Uploaded image" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
+                    <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   </div>
                 </div>
               </div>
@@ -111,12 +111,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px;">
-                  <img src="${url}" alt="Image from URL" style="max-width: 100%; height: auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
-                  <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center;">Click to add caption</div>
-                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 400px; height: 300px;">
+                  <img src="${url}" alt="Image from URL" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
+                  <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                 </div>
               </div>
             </div>
@@ -142,15 +142,15 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 250px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px;">
-                    <video controls style="max-width: 100%; height: auto; border-radius: 6px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 500px; height: 350px;">
+                    <video controls style="width: 100%; height: calc(100% - 40px); border-radius: 6px;">
                       <source src="${e.target?.result}" type="${file.type}">
                       Your browser does not support the video tag.
                     </video>
-                    <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
-                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                    <div contenteditable="true" style="color: #374151; font-size: 14px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add video caption</div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   </div>
                 </div>
               </div>
@@ -175,12 +175,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 250px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px;">
-                  ${embedCode}
-                  <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px; text-align: center;">Click to add video caption</div>
-                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; width: 500px; height: 350px;">
+                  <div style="width: 100%; height: calc(100% - 40px);">${embedCode}</div>
+                  <div contenteditable="true" style="color: #374151; font-size: 14px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add video caption</div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                 </div>
               </div>
             </div>
@@ -205,12 +205,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 120px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 200px; height: 150px;">
                     <img src="${e.target?.result}" alt="Uploaded icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
                     <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
-                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   </div>
                 </div>
               </div>
@@ -235,12 +235,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 120px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 200px; height: 150px;">
                   <img src="${url}" alt="Icon from URL" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
                   <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
-                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                 </div>
               </div>
             </div>
@@ -265,12 +265,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
-                    <img src="${e.target?.result}" alt="Uploaded sticker" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 250px; height: 200px;">
+                    <img src="${e.target?.result}" alt="Uploaded sticker" style="max-width: 150px; max-height: 120px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
                     <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
-                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   </div>
                 </div>
               </div>
@@ -295,12 +295,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
-                  <img src="${url}" alt="Sticker from URL" style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 250px; height: 200px;">
+                  <img src="${url}" alt="Sticker from URL" style="max-width: 150px; max-height: 120px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
                   <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
-                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                 </div>
               </div>
             </div>
@@ -325,12 +325,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 300px; height: 220px;">
                     <img src="${e.target?.result}" alt="Uploaded GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
                     <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
-                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                    <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                    <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   </div>
                 </div>
               </div>
@@ -357,12 +357,12 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px;">
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 300px; height: 220px;">
                   <img src="${url}" alt="GIF from URL" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
                   <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
-                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; background: #3b82f6; border-radius: 3px; cursor: ns-resize;"></div>
-                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 20px; background: #3b82f6; border-radius: 3px; cursor: ew-resize;"></div>
-                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 2px; cursor: nwse-resize;"></div>
+                  <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+                  <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
                 </div>
               </div>
             </div>
@@ -399,7 +399,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
       }
     };
 
-    // Add resize functionality
+    // Enhanced resize functionality with proper drag handling
     (window as any).initializeResizeHandles = function() {
       const resizePanels = document.querySelectorAll('.resizable-panel');
       
@@ -426,6 +426,11 @@ const EditorContent: React.FC<EditorContentProps> = ({
             startWidth = rect.width;
             startHeight = rect.height;
             
+            // Add visual feedback
+            (handle as HTMLElement).style.opacity = '1';
+            (handle as HTMLElement).style.background = '#1d4ed8';
+            document.body.style.cursor = (handle as HTMLElement).style.cursor;
+            
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);
           });
@@ -442,13 +447,19 @@ const EditorContent: React.FC<EditorContentProps> = ({
             }
             
             if (handle.classList.contains('resize-handle-bottom') || handle.classList.contains('resize-handle-corner')) {
-              const newHeight = Math.max(50, startHeight + deltaY);
+              const newHeight = Math.max(80, startHeight + deltaY);
               (panel as HTMLElement).style.height = newHeight + 'px';
             }
           }
           
           function handleMouseUp() {
             isResizing = false;
+            document.body.style.cursor = 'auto';
+            
+            // Reset handle appearance
+            (handle as HTMLElement).style.opacity = '0';
+            (handle as HTMLElement).style.background = '#3b82f6';
+            
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
             
@@ -803,7 +814,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
         />
       )}
       
-      {/* Custom styles for drag effects and resize handles */}
+      {/* Enhanced styles for drag effects and functional resize handles */}
       <style>
         {`
           .dragging {
@@ -836,16 +847,19 @@ const EditorContent: React.FC<EditorContentProps> = ({
           .resize-handle {
             z-index: 100;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
           }
 
           .resizable-panel:hover .resize-handle {
-            opacity: 1;
+            opacity: 0.8;
           }
 
           .resize-handle:hover {
             opacity: 1 !important;
             background: #1d4ed8 !important;
+            transform: scale(1.1);
           }
 
           .resizable-block-wrapper {
@@ -859,8 +873,20 @@ const EditorContent: React.FC<EditorContentProps> = ({
 
           .resizable-panel {
             min-width: 100px;
-            min-height: 50px;
+            min-height: 80px;
             position: relative;
+            transition: all 0.1s ease;
+          }
+
+          .resizable-panel:hover {
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+          }
+
+          /* Prevent text selection during resize */
+          body.resizing {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
           }
         `}
       </style>
