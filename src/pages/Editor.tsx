@@ -11,6 +11,9 @@ import ContentBlocks from "@/components/Editor/ContentBlocks";
 import SettingsPanel from "@/components/Editor/SettingsPanel";
 import LayoutSelector from "@/components/Editor/LayoutSelector";
 import VideoUploader from "@/components/Editor/VideoUploader";
+import GifUploader from '@/components/Editor/GifUploader';
+import IconUploader from '@/components/Editor/IconUploader';
+import StickerUploader from '@/components/Editor/StickerUploader';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -35,6 +38,9 @@ const Editor = () => {
   const [showBackgroundSelector, setShowBackgroundSelector] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showVideoUploader, setShowVideoUploader] = useState(false);
+  const [showGifUploader, setShowGifUploader] = useState(false);
+  const [showIconUploader, setShowIconUploader] = useState(false);
+  const [showStickerUploader, setShowStickerUploader] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   
   // Settings
@@ -53,6 +59,8 @@ const Editor = () => {
     heading: null as number | null,
     align: "left",
   });
+
+  const [templateColor, setTemplateColor] = useState('white');
 
   // Check current formatting
   const checkFormatting = () => {
@@ -148,8 +156,8 @@ const Editor = () => {
       <div class="draggable-row image-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
         <div class="resizable-block-wrapper">
           <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-            <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 400px; height: 300px;">
-              <img src="${imageUrl}" alt="Uploaded image" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px; cursor: pointer;" />
+            <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; margin: 0 auto;">
+              <img src="${imageUrl}" alt="Uploaded image" style="max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" />
               <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
               <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
               <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -187,12 +195,72 @@ const Editor = () => {
     setShowVideoUploader(true);
   };
 
-  const handleInsertVideo = (videoUrl: string) => {
-    document.execCommand("insertHTML", false, `<video src="${videoUrl}" controls style="max-width: 100%;"></video>`);
+  const handleInsertVideoBlock = (videoUrl: string) => {
+    const videoBlockHtml = `
+      <div class="draggable-row video-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+        <video src="${videoUrl}" controls style="max-width: 100%; max-height: 350px; border-radius: 8px; display: block; margin: 0 auto;"></video>
+        <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add video caption</div>
+      </div>
+    `;
+    document.execCommand('insertHTML', false, videoBlockHtml);
+  };
+
+  const handleGif = () => setShowGifUploader(true);
+  const handleIcon = () => setShowIconUploader(true);
+  const handleSticker = () => setShowStickerUploader(true);
+
+  const handleInsertGif = (gifUrl: string) => {
+    const gifBlockHtml = `
+      <div class="draggable-row gif-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+        <img src="${gifUrl}" alt="GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
+        <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
+      </div>
+    `;
+    document.execCommand('insertHTML', false, gifBlockHtml);
+  };
+
+  const handleInsertIcon = (iconUrl: string) => {
+    const iconBlockHtml = `
+      <div class="draggable-row icon-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+        <img src="${iconUrl}" alt="Icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
+        <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
+      </div>
+    `;
+    document.execCommand('insertHTML', false, iconBlockHtml);
+  };
+
+  const handleInsertSticker = (stickerUrl: string) => {
+    const stickerBlockHtml = `
+      <div class="draggable-row sticker-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+        <img src="${stickerUrl}" alt="Sticker" style="max-height: 150px; border-radius: 12px; object-fit: cover; margin: 0 auto; display: block;" />
+        <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
+      </div>
+    `;
+    document.execCommand('insertHTML', false, stickerBlockHtml);
   };
 
   // Content block handler
   const handleInsertContentBlock = (blockType: string) => {
+    if (blockType === 'image') {
+      setShowImageUploader(true);
+      return;
+    }
+    if (blockType === 'gif') {
+      setShowGifUploader(true);
+      return;
+    }
+    if (blockType === 'icons') {
+      setShowIconUploader(true);
+      return;
+    }
+    if (blockType === 'sticker') {
+      setShowStickerUploader(true);
+      return;
+    }
+    if (blockType === 'video') {
+      setShowVideoUploader(true);
+      return;
+    }
     let html = '';
     
     switch(blockType) {
@@ -204,9 +272,6 @@ const Editor = () => {
         break;
       case 'list':
         html = '<div class="draggable-row" style="margin-bottom: 20px;"><div style="padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><ul contenteditable="true" style="margin: 0; padding-left: 20px; line-height: 1.8;"><li style="margin-bottom: 8px;">First list item - click to edit</li><li style="margin-bottom: 8px;">Second list item - add your content</li><li style="margin-bottom: 8px;">Third list item - press Enter for new items</li></ul></div></div>';
-        break;
-      case 'image':
-        html = '<div class="draggable-row image-upload-block" style="margin-bottom: 20px; text-align: center; padding: 30px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="margin-bottom: 20px;"><div style="font-size: 48px; margin-bottom: 15px; color: #9ca3af;">📷</div><div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #374151;">Upload Image</div><div style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">Choose an image file from your computer</div></div><div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;"><input type="file" accept="image/*" style="padding: 10px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 14px;" onchange="handleImageUpload(this, event)" /><input type="url" placeholder="Or paste image URL here..." style="padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; background: white; width: 250px; font-size: 14px;" /></div><div id="image-preview" style="margin-top: 15px; display: none;"><img style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover;" /><div contenteditable="true" style="margin-top: 10px; font-style: italic; color: #6b7280;">Click to add caption</div></div></div>';
         break;
       case 'image-box':
         html = '<div class="draggable-row" style="margin-bottom: 20px; position: relative; min-height: 300px; background-image: url(\'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop\'); background-size: cover; background-position: center; background-repeat: no-repeat; border: 2px dashed #d1d5db; border-radius: 12px; overflow: hidden;"><div contenteditable="true" style="position: relative; z-index: 2; padding: 30px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); background: rgba(0,0,0,0.4); height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 12px;"><h3 style="margin: 0; font-size: 24px; font-weight: bold;">Click here to add your overlay text</h3></div></div>';
@@ -229,20 +294,8 @@ const Editor = () => {
       case 'html':
         html = '<div class="draggable-row" style="margin-bottom: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="background: #1f2937; color: #10b981; padding: 15px; border-radius: 8px 8px 0 0; font-family: monospace; font-size: 12px;">HTML Code Block</div><div contenteditable="true" style="padding: 20px; font-family: \'Courier New\', monospace; background: #f8fafc; border-radius: 0 0 8px 8px; min-height: 100px; font-size: 14px; line-height: 1.6;">&lt;div style="text-align: center; padding: 20px;"&gt;<br>&nbsp;&nbsp;&lt;h3&gt;Custom HTML Content&lt;/h3&gt;<br>&nbsp;&nbsp;&lt;p&gt;Edit this HTML code as needed&lt;/p&gt;<br>&lt;/div&gt;</div></div>';
         break;
-      case 'video':
-        html = '<div class="draggable-row video-upload-block" style="margin-bottom: 20px; text-align: center; padding: 30px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="margin-bottom: 20px;"><div style="font-size: 48px; margin-bottom: 15px; color: #9ca3af;">🎬</div><div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #374151;">Upload Video</div><div style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">Choose a video file or paste embed code</div></div><div style="display: flex; flex-direction: column; gap: 15px; align-items: center;"><input type="file" accept="video/*" style="padding: 10px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 14px;" onchange="handleVideoUpload(this, event)" /><textarea placeholder="Or paste video embed code/URL here..." style="padding: 15px; border: 1px solid #d1d5db; border-radius: 6px; background: white; width: 300px; height: 80px; font-size: 14px; resize: vertical;" contenteditable="true"></textarea></div><div id="video-preview" style="margin-top: 15px; display: none;"><div style="background: #000; border-radius: 8px; padding: 20px; color: white;">Video will appear here</div></div></div>';
-        break;
-      case 'icons':
-        html = '<div class="draggable-row icon-upload-block" style="text-align: center; margin-bottom: 20px; padding: 30px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="margin-bottom: 20px;"><div style="font-size: 48px; margin-bottom: 15px; color: #9ca3af;">🎨</div><div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #374151;">Upload Icon</div><div style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">Choose an icon file or add icon URL</div></div><div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;"><input type="file" accept="image/*,.svg" style="padding: 10px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 14px;" onchange="handleIconUpload(this, event)" /><input type="url" placeholder="Or paste icon URL here..." style="padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; background: white; width: 250px; font-size: 14px;" /></div><div id="icon-preview" style="margin-top: 15px; display: none;"><img style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; border: 1px solid #e5e7eb;" /><div contenteditable="true" style="margin-top: 10px; color: #374151; font-size: 14px;">Icon label</div></div></div>';
-        break;
       case 'menu':
         html = '<div class="draggable-row" style="margin-bottom: 20px; padding: 15px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><nav style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div contenteditable="true" style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #1f2937;">Navigation Menu</div><ul contenteditable="true" style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 25px;"><li><a href="#home" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Home</a></li><li><a href="#about" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">About</a></li><li><a href="#services" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Services</a></li><li><a href="#contact" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Contact</a></li></ul></nav></div>';
-        break;
-      case 'sticker':
-        html = '<div class="draggable-row sticker-upload-block" style="text-align: center; margin-bottom: 20px; padding: 30px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="margin-bottom: 20px;"><div style="font-size: 48px; margin-bottom: 15px; color: #9ca3af;">🏷️</div><div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #374151;">Upload Sticker</div><div style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">Choose a sticker image file</div></div><div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;"><input type="file" accept="image/*" style="padding: 10px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 14px;" onchange="handleStickerUpload(this, event)" /><input type="url" placeholder="Or paste sticker URL here..." style="padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; background: white; width: 250px; font-size: 14px;" /></div><div id="sticker-preview" style="margin-top: 15px; display: none;"><img style="max-width: 150px; max-height: 150px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg);" /><div contenteditable="true" style="margin-top: 10px; color: #374151; font-size: 14px;">Sticker caption</div></div></div>';
-        break;
-      case 'gif':
-        html = '<div class="draggable-row gif-upload-block" style="text-align: center; margin-bottom: 20px; padding: 30px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="margin-bottom: 20px;"><div style="font-size: 48px; margin-bottom: 15px; color: #9ca3af;">🎞️</div><div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #374151;">Upload GIF</div><div style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">Choose a .gif file from your computer</div></div><div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;"><input type="file" accept=".gif,image/gif" style="padding: 10px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 14px;" onchange="handleGifUpload(this, event)" /><input type="url" placeholder="Or paste GIF URL here..." style="padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; background: white; width: 250px; font-size: 14px;" /></div><div style="font-size: 12px; color: #6b7280; margin-bottom: 15px;">Only .gif format accepted</div><div id="gif-preview" style="margin-top: 15px; display: none;"><img style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover;" /><div contenteditable="true" style="margin-top: 10px; color: #374151; font-size: 14px;">GIF caption</div></div></div>';
         break;
       default:
         html = `<div class="draggable-row" style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>[${blockType} block - click to edit]</p></div>`;
@@ -292,7 +345,9 @@ const Editor = () => {
       ...emailSettings,
       ...newSettings
     });
-    
+    if (newSettings.templateColor) {
+      setTemplateColor(newSettings.templateColor);
+    }
     // Apply settings to preview if needed
     if (previewRef.current) {
       previewRef.current.style.width = `${newSettings.contentWidth}px`;
@@ -506,7 +561,7 @@ const Editor = () => {
                     <Card>
                       <CardContent className="pt-6">
                         <div 
-                          className="preview-container border rounded-lg p-6 bg-white"
+                          className={`preview-container p-6 bg-white border rounded-lg template-${templateColor}`}
                           style={{
                             maxWidth: `${emailSettings.contentWidth}px`,
                             margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
@@ -547,7 +602,7 @@ const Editor = () => {
       <VideoUploader
         isOpen={showVideoUploader}
         onClose={() => setShowVideoUploader(false)}
-        onInsert={handleInsertVideo}
+        onInsert={handleInsertVideoBlock}
       />
       
       <LinkEditor
@@ -570,7 +625,7 @@ const Editor = () => {
           </DialogHeader>
           <div 
             ref={previewRef}
-            className="preview-container p-6 bg-white border rounded-lg"
+            className={`preview-container p-6 bg-white border rounded-lg template-${templateColor}`}
             style={{
               maxWidth: `${emailSettings.contentWidth}px`,
               margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
@@ -602,6 +657,21 @@ const Editor = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <GifUploader
+        isOpen={showGifUploader}
+        onClose={() => setShowGifUploader(false)}
+        onInsert={handleInsertGif}
+      />
+      <IconUploader
+        isOpen={showIconUploader}
+        onClose={() => setShowIconUploader(false)}
+        onInsert={handleInsertIcon}
+      />
+      <StickerUploader
+        isOpen={showStickerUploader}
+        onClose={() => setShowStickerUploader(false)}
+        onInsert={handleInsertSticker}
+      />
     </div>
   );
 };
