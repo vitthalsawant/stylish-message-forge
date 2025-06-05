@@ -5,26 +5,26 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 
-interface ImageUploaderProps {
+interface VideoUploaderProps {
   isOpen: boolean;
   onClose: () => void;
-  onInsert: (imageUrl: string) => void;
+  onInsert: (videoUrl: string) => void;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ isOpen, onClose, onInsert }) => {
-  const [imageUrl, setImageUrl] = useState('');
-  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+const VideoUploader: React.FC<VideoUploaderProps> = ({ isOpen, onClose, onInsert }) => {
+  const [videoUrl, setVideoUrl] = useState('');
+  const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(e.target.value);
+    setVideoUrl(e.target.value);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setUploadedImage(file);
+      setUploadedVideo(file);
       
       // Create a preview URL
       const reader = new FileReader();
@@ -36,14 +36,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ isOpen, onClose, onInsert
   };
 
   const handleInsertUrl = () => {
-    if (imageUrl.trim()) {
-      onInsert(imageUrl);
+    if (videoUrl.trim()) {
+      onInsert(videoUrl);
       onClose();
-      setImageUrl('');
+      setVideoUrl('');
     } else {
       toast({
         title: "Error",
-        description: "Please enter a valid image URL",
+        description: "Please enter a valid video URL",
         variant: "destructive",
       });
     }
@@ -53,12 +53,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ isOpen, onClose, onInsert
     if (previewUrl) {
       onInsert(previewUrl);
       onClose();
-      setUploadedImage(null);
+      setUploadedVideo(null);
       setPreviewUrl(null);
     } else {
       toast({
         title: "Error",
-        description: "Please select an image to upload",
+        description: "Please select a video to upload",
         variant: "destructive",
       });
     }
@@ -68,32 +68,32 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ isOpen, onClose, onInsert
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Insert Image</DialogTitle>
+          <DialogTitle>Insert Video</DialogTitle>
         </DialogHeader>
         
         <Tabs defaultValue="url" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="url">Image URL</TabsTrigger>
-            <TabsTrigger value="upload">Upload Image</TabsTrigger>
+            <TabsTrigger value="url">Video URL</TabsTrigger>
+            <TabsTrigger value="upload">Upload Video</TabsTrigger>
           </TabsList>
           
           <TabsContent value="url" className="space-y-4 mt-4">
             <Input
-              placeholder="https://example.com/image.jpg"
-              value={imageUrl}
+              placeholder="https://example.com/video.mp4"
+              value={videoUrl}
               onChange={handleUrlChange}
             />
             
-            {imageUrl && (
+            {videoUrl && (
               <div className="border rounded-md p-2 mt-2">
                 <p className="text-xs text-muted-foreground mb-2">Preview:</p>
-                <img 
-                  src={imageUrl} 
-                  alt="Preview" 
+                <video 
+                  src={videoUrl} 
+                  controls 
                   className="max-h-[200px] mx-auto object-contain"
                   onError={() => toast({
                     title: "Error",
-                    description: "Unable to load image from this URL",
+                    description: "Unable to load video from this URL",
                     variant: "destructive",
                   })} 
                 />
@@ -101,31 +101,30 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ isOpen, onClose, onInsert
             )}
             
             <div className="flex justify-end">
-              <Button onClick={handleInsertUrl}>Insert Image</Button>
+              <Button onClick={handleInsertUrl}>Insert Video</Button>
             </div>
           </TabsContent>
           
           <TabsContent value="upload" className="space-y-4 mt-4">
             <Input
               type="file"
-              accept="image/*"
+              accept="video/*"
               onChange={handleFileChange}
             />
             
             {previewUrl && (
               <div className="border rounded-md p-2 mt-2">
                 <p className="text-xs text-muted-foreground mb-2">Preview:</p>
-                <img 
+                <video 
                   src={previewUrl} 
-                  alt="Preview" 
+                  controls 
                   className="max-h-[200px] mx-auto object-contain" 
-                  style={{ display: 'block', margin: '0 auto' }}
                 />
               </div>
             )}
             
             <div className="flex justify-end">
-              <Button onClick={handleInsertUpload} disabled={!previewUrl}>Insert Image</Button>
+              <Button onClick={handleInsertUpload}>Insert Video</Button>
             </div>
           </TabsContent>
         </Tabs>
@@ -134,4 +133,4 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ isOpen, onClose, onInsert
   );
 };
 
-export default ImageUploader;
+export default VideoUploader; 

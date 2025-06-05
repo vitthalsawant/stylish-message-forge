@@ -10,6 +10,7 @@ import TemplateSelector from "@/components/Editor/TemplateSelector";
 import ContentBlocks from "@/components/Editor/ContentBlocks";
 import SettingsPanel from "@/components/Editor/SettingsPanel";
 import LayoutSelector from "@/components/Editor/LayoutSelector";
+import VideoUploader from "@/components/Editor/VideoUploader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ const Editor = () => {
   const [showLinkEditor, setShowLinkEditor] = useState(false);
   const [showBackgroundSelector, setShowBackgroundSelector] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showVideoUploader, setShowVideoUploader] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   
   // Settings
@@ -135,12 +137,29 @@ const Editor = () => {
     document.execCommand("insertHTML", false, `<a href="${url}" target="_blank">${text}</a>`);
   };
 
+  // Image button handler: only open the popup
   const handleImage = () => {
     setShowImageUploader(true);
   };
 
+  // Insert a complete image block with the selected image (not the upload UI)
   const handleInsertImage = (imageUrl: string) => {
-    document.execCommand("insertHTML", false, `<img src="${imageUrl}" alt="Inserted image" style="max-width: 100%;" />`);
+    const imageBlockHtml = `
+      <div class="draggable-row image-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+        <div class="resizable-block-wrapper">
+          <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
+            <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 400px; height: 300px;">
+              <img src="${imageUrl}" alt="Uploaded image" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px; cursor: pointer;" />
+              <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
+              <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
+              <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
+              <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.execCommand("insertHTML", false, imageBlockHtml);
   };
 
   const handleBackgroundImage = () => {
@@ -162,6 +181,14 @@ const Editor = () => {
       const event = new Event('input', { bubbles: true });
       document.activeElement.dispatchEvent(event);
     }
+  };
+
+  const handleVideo = () => {
+    setShowVideoUploader(true);
+  };
+
+  const handleInsertVideo = (videoUrl: string) => {
+    document.execCommand("insertHTML", false, `<video src="${videoUrl}" controls style="max-width: 100%;"></video>`);
   };
 
   // Content block handler
@@ -459,6 +486,7 @@ const Editor = () => {
                         onAlign={handleAlign}
                         onLink={handleLink}
                         onImage={handleImage}
+                        onVideo={handleVideo}
                         onBackgroundImage={handleBackgroundImage}
                         onColor={handleColor}
                         activeFormats={activeFormats}
@@ -514,6 +542,12 @@ const Editor = () => {
         isOpen={showImageUploader}
         onClose={() => setShowImageUploader(false)}
         onInsert={handleInsertImage}
+      />
+      
+      <VideoUploader
+        isOpen={showVideoUploader}
+        onClose={() => setShowVideoUploader(false)}
+        onInsert={handleInsertVideo}
       />
       
       <LinkEditor

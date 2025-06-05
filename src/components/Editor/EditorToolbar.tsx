@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -13,7 +12,8 @@ import {
   Link, 
   ImagePlus, 
   Palette,
-  Image
+  Image,
+  Video
 } from "lucide-react";
 import { 
   Menubar, 
@@ -39,6 +39,7 @@ interface EditorToolbarProps {
   onAlign: (align: string) => void;
   onLink: () => void;
   onImage: () => void;
+  onVideo: () => void;
   onColor: (color: string) => void;
   onBackgroundImage?: () => void;
   activeFormats: {
@@ -58,6 +59,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onAlign,
   onLink,
   onImage,
+  onVideo,
   onColor,
   onBackgroundImage,
   activeFormats,
@@ -177,6 +179,10 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
         <ToolbarButton tooltip="Insert Image" onClick={onImage}>
           <ImagePlus size={18} />
+        </ToolbarButton>
+
+        <ToolbarButton tooltip="Insert Video" onClick={onVideo}>
+          <Video size={18} />
         </ToolbarButton>
 
         {onBackgroundImage && (
