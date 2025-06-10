@@ -36,14 +36,25 @@ const EditorContent: React.FC<EditorContentProps> = ({
     onChange(content);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.execCommand('insertLineBreak');
+    }
+  };
+
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     
     // Get plain text from clipboard
     const text = e.clipboardData.getData('text/plain');
     
+    // Split text into paragraphs and format them
+    const paragraphs = text.split('\n').filter(p => p.trim());
+    const formattedText = paragraphs.map(p => `<p style="margin: 0 0 15px 0; line-height: 1.6;">${p}</p>`).join('');
+    
     // Insert at cursor position
-    document.execCommand('insertText', false, text);
+    document.execCommand('insertHTML', false, formattedText);
     
     // Update content after paste
     if (editorRef.current) {
@@ -793,7 +804,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
         className="editor-content p-4 border border-t-0 rounded-b-md min-h-[300px] focus:outline-none focus:ring-1 focus:ring-primary bg-white"
         contentEditable
         onInput={handleInput}
-        onBlur={handleInput}
+        onKeyDown={handleKeyDown}
         onPaste={handlePaste}
         suppressContentEditableWarning={true}
         style={{ 
