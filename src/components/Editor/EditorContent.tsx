@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import ContextMenu from './ContextMenu';
 
 interface EditorContentProps {
   content: string;
@@ -17,6 +18,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
   const [draggedElement, setDraggedElement] = useState<HTMLElement | null>(null);
   const [dragOverElement, setDragOverElement] = useState<HTMLElement | null>(null);
   const [dropIndicatorPosition, setDropIndicatorPosition] = useState<{ top: number; visible: boolean }>({ top: 0, visible: false });
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; target: HTMLElement } | null>(null);
 
   useEffect(() => {
     const handleSelection = () => {
@@ -792,6 +794,49 @@ const EditorContent: React.FC<EditorContentProps> = ({
     };
   }, [draggedElement, dragOverElement]);
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLElement;
+    console.log('Context Menu Debug: Right-clicked on:', target);
+    console.log('Context Menu Debug: Target classList:', target.classList);
+    console.log('Context Menu Debug: Target parent classList:', target.parentElement?.classList);
+
+    const section = target.closest('.resizable-block-wrapper, .resizable-panel, .draggable-row');
+    
+    if (section) {
+      console.log('Context Menu Debug: Found section:', section);
+      setContextMenu({
+        x: e.clientX,
+        y: e.clientY,
+        target: section as HTMLElement
+      });
+    } else {
+      console.log('Context Menu Debug: No section found for target:', target);
+    }
+  };
+
+  const handleDeleteSection = () => {
+    if (contextMenu?.target) {
+      contextMenu.target.remove();
+      if (editorRef.current) {
+        onChange(editorRef.current.innerHTML);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (contextMenu) {
+        setContextMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [contextMenu]);
+
   return (
     <div className="relative">
       <div
@@ -801,6 +846,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
         onInput={handleInput}
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
+        onContextMenu={handleContextMenu}
         suppressContentEditableWarning={true}
         style={{ 
           whiteSpace: 'pre-wrap',
@@ -946,6 +992,15 @@ const EditorContent: React.FC<EditorContentProps> = ({
           }
         `}
       </style>
+      
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onDelete={handleDeleteSection}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
     </div>
   );
 };
