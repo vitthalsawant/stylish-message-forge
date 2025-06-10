@@ -39,6 +39,7 @@ interface EditorToolbarProps {
   onAlign: (align: string) => void;
   onLink: () => void;
   onImage: () => void;
+  onInlineImage: () => void;
   onVideo: () => void;
   onColor: (color: string) => void;
   onBackgroundImage?: () => void;
@@ -59,6 +60,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onAlign,
   onLink,
   onImage,
+  onInlineImage,
   onVideo,
   onColor,
   onBackgroundImage,
@@ -179,6 +181,10 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
         <ToolbarButton tooltip="Insert Image" onClick={onImage}>
           <ImagePlus size={18} />
+        </ToolbarButton>
+
+        <ToolbarButton tooltip="Insert Inline Image" onClick={onInlineImage}>
+          <Image size={18} />
         </ToolbarButton>
 
         <ToolbarButton tooltip="Insert Video" onClick={onVideo}>

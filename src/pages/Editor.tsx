@@ -41,6 +41,7 @@ const Editor = () => {
   const [showGifUploader, setShowGifUploader] = useState(false);
   const [showIconUploader, setShowIconUploader] = useState(false);
   const [showStickerUploader, setShowStickerUploader] = useState(false);
+  const [showInlineImageUploader, setShowInlineImageUploader] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   
   // Settings
@@ -153,12 +154,11 @@ const Editor = () => {
   // Insert a complete image block with the selected image (not the upload UI)
   const handleInsertImage = (imageUrl: string) => {
     const imageBlockHtml = `
-      <div class="draggable-row image-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+      <div class="draggable-row image-block" style="margin-bottom: 20px;">
         <div class="resizable-block-wrapper">
           <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-            <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; margin: 0 auto;">
-              <img src="${imageUrl}" alt="Uploaded image" style="max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" />
-              <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
+            <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
+              <img src="${imageUrl}" alt="Uploaded image" style="max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" />
               <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
               <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
               <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -237,6 +237,12 @@ const Editor = () => {
       </div>
     `;
     document.execCommand('insertHTML', false, stickerBlockHtml);
+  };
+
+  // Add this function for inline image insertion
+  const handleInsertInlineImage = (imageUrl: string) => {
+    const imageHtml = `<img src="${imageUrl}" alt="Inline image" style="display:inline-block; vertical-align:middle; margin:4px; max-width:120px; max-height:120px; border-radius:6px; object-fit:contain; cursor:pointer; border:2px solid transparent; transition:border-color 0.2s;" />&nbsp;`;
+    document.execCommand("insertHTML", false, imageHtml);
   };
 
   // Content block handler
@@ -454,6 +460,10 @@ const Editor = () => {
     };
   };
 
+  const handleInlineImage = () => {
+    setShowInlineImageUploader(true);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header 
@@ -541,6 +551,7 @@ const Editor = () => {
                         onAlign={handleAlign}
                         onLink={handleLink}
                         onImage={handleImage}
+                        onInlineImage={handleInlineImage}
                         onVideo={handleVideo}
                         onBackgroundImage={handleBackgroundImage}
                         onColor={handleColor}
@@ -671,6 +682,14 @@ const Editor = () => {
         isOpen={showStickerUploader}
         onClose={() => setShowStickerUploader(false)}
         onInsert={handleInsertSticker}
+      />
+      <ImageUploader
+        isOpen={showInlineImageUploader}
+        onClose={() => setShowInlineImageUploader(false)}
+        onInsert={(imageUrl) => {
+          handleInsertInlineImage(imageUrl);
+          setShowInlineImageUploader(false);
+        }}
       />
     </div>
   );

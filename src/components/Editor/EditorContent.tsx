@@ -90,9 +90,8 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 400px; height: 300px;">
-                    <img src="${e.target?.result}" alt="Uploaded image" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
-                    <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
+                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
+                    <img src="${e.target?.result}" alt="Uploaded image" style="max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
                     <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
                     <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
                     <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -122,9 +121,8 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 400px; height: 300px;">
-                  <img src="${url}" alt="Image from URL" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
-                  <div contenteditable="true" style="font-style: italic; color: #6b7280; font-size: 14px; margin-top: 10px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add caption</div>
+                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
+                  <img src="${url}" alt="Image from URL" style="max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
                   <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   <div class="resize-handle resize-handle-corner" style="position: absolute; bottom: -4px; right: -4px; width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; cursor: nwse-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -735,9 +733,6 @@ const EditorContent: React.FC<EditorContentProps> = ({
             const imageHtml = `
               <div class="draggable-row image-container relative" contenteditable="false">
                 <img src="${imageUrl}" alt="Uploaded image" style="max-width: 100%;" />
-                <div class="image-overlay absolute inset-0 flex items-center justify-center cursor-text" contenteditable="true">
-                  <p class="text-white text-2xl font-bold">Add text here</p>
-                </div>
               </div>
             `;
             
@@ -867,7 +862,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             opacity: 0.8;
           }
 
-          .resize-handle:hover {
+          .resizable-handle:hover {
             opacity: 1 !important;
             background: #1d4ed8 !important;
             transform: scale(1.1);
@@ -898,6 +893,56 @@ const EditorContent: React.FC<EditorContentProps> = ({
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
+          }
+
+          .resizable-panel {
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+          }
+          .resizable-panel:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+          }
+          .resize-handle {
+            opacity: 0;
+            transition: opacity 0.2s;
+          }
+          .resizable-panel:hover .resize-handle {
+            opacity: 0.8;
+          }
+          .resize-handle:hover {
+            opacity: 1 !important;
+            background: #1d4ed8 !important;
+            transform: scale(1.1);
+          }
+          .inline-image-container {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 4px;
+            max-width: 200px;
+            position: relative;
+          }
+          .inline-image-container img {
+            max-width: 100%;
+            max-height: 120px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+          }
+          .inline-image-container:hover img {
+            border-color: #3b82f6;
+          }
+          .inline-image-container .resize-handle {
+            display: none;
+          }
+          .inline-image-container:hover .resize-handle {
+            display: block;
+            opacity: 0.8;
           }
         `}
       </style>
