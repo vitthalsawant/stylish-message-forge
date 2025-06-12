@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -22,7 +21,7 @@ interface TemplateSelectorProps {
   onSelectTemplate: (template: Template) => void;
 }
 
-const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate }) => {
+const TemplateSelector = ({ onSelectTemplate }: TemplateSelectorProps) => {
   // Enhanced templates with aesthetic designs and backgrounds
   const templates: Template[] = [
     {
@@ -297,6 +296,47 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
         </div>
         <div class="draggable-row" style="text-align: center; margin-bottom: 20px; padding: 30px;">
           <a href="#" contenteditable="true" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: 700; font-size: 18px; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);">📝 Take Survey (2 min)</a>
+        </div>
+      `
+    },
+    {
+      id: 'formidium-company-email',
+      name: 'Company Email (Formidium)',
+      category: 'company',
+      thumbnail: 'https://placehold.co/200x150/d2e3f5/2a3d54?text=Formidium+Email',
+      content: `
+        <div class="draggable-row" style="margin-bottom: 20px; padding: 30px; text-align: center; background: linear-gradient(135deg, #e0efff 0%, #c4e0ff 100%); border-radius: 12px;">
+          <img src="/lovable-uploads/formidium.png" alt="Formidium Logo" style="max-width: 100%; width: 100%; height: auto; margin-bottom: 20px;">
+          <h1 contenteditable="true" style="color: #2a3d54; font-size: 28px; font-weight: bold; margin: 0 0 10px 0;">[Your Company Name] Updates!</h1>
+          <p contenteditable="true" style="color: #4a6a8a; font-size: 16px; margin: 0;">Stay informed with the latest from us.</p>
+        </div>
+        <div class="draggable-row" style="margin-bottom: 20px; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+          <h2 contenteditable="true" style="color: #1e293b; font-size: 24px; margin: 0 0 20px 0;">Hello,</h2>
+          <p contenteditable="true" style="color: #475569; font-size: 16px; line-height: 1.6;">
+            [Insert your email content here. You can type directly or copy and paste your existing email body. This section is fully editable to fit your message.]
+          </p>
+          <p contenteditable="true" style="color: #475569; font-size: 16px; line-height: 1.6; margin-top: 20px;">
+            Thank you for being a valued part of our community.
+          </p>
+        </div>
+        <div class="draggable-row" style="text-align: center; padding: 30px; background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%); border-radius: 12px; margin-top: 20px;">
+          <p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0;">Connect with us:</p>
+          <div style="display: flex; justify-content: center; gap: 15px;">
+            <a href="[Your Website Link]" target="_blank" style="text-decoration: none;">
+              <img src="https://img.icons8.com/color/48/000000/internet.png" alt="Website" style="width: 30px; height: 30px;">
+            </a>
+            <a href="[Your LinkedIn Link]" target="_blank" style="text-decoration: none;">
+              <img src="https://img.icons8.com/color/48/000000/linkedin--v1.png" alt="LinkedIn" style="width: 30px; height: 30px;">
+            </a>
+            <a href="[Your Instagram Link]" target="_blank" style="text-decoration: none;">
+              <img src="https://img.icons8.com/color/48/000000/instagram-new--v1.png" alt="Instagram" style="width: 30px; height: 30px;">
+            </a>
+            <a href="[Your Twitter Link]" target="_blank" style="text-decoration: none;">
+              <img src="https://img.icons8.com/color/48/000000/twitter--v1.png" alt="Twitter" style="width: 30px; height: 30px;">
+            </a>
+          </div>
+          <p contenteditable="true" style="color: #64748b; font-size: 12px; margin-top: 20px;">&copy; 2024 [Your Company Name]. All rights reserved.</p>
+          <p contenteditable="true" style="color: #64748b; font-size: 12px; margin: 5px 0 0 0;"><a href="[Unsubscribe Link]" style="color: #64748b; text-decoration: underline;">Unsubscribe</a></p>
         </div>
       `
     }

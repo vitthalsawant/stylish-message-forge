@@ -48,15 +48,60 @@ const EditorContent: React.FC<EditorContentProps> = ({
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     
-    // Get plain text from clipboard
+    // Get HTML content from clipboard
+    const html = e.clipboardData.getData('text/html');
     const text = e.clipboardData.getData('text/plain');
     
-    // Split text into paragraphs and format them
-    const paragraphs = text.split('\n').filter(p => p.trim());
-    const formattedText = paragraphs.map(p => `<p style="margin: 0 0 15px 0; line-height: 1.6;">${p}</p>`).join('');
-    
-    // Insert at cursor position
-    document.execCommand('insertHTML', false, formattedText);
+    // If HTML content exists, use it
+    if (html) {
+      // Create a temporary div to sanitize and process the HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      
+      // Process images to ensure they're properly sized and styled
+      const images = tempDiv.getElementsByTagName('img');
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.borderRadius = '8px';
+        img.style.margin = '10px 0';
+      }
+      
+      // Process tables to ensure they're properly styled
+      const tables = tempDiv.getElementsByTagName('table');
+      for (let i = 0; i < tables.length; i++) {
+        const table = tables[i];
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+        table.style.borderRadius = '8px';
+        table.style.overflow = 'hidden';
+        table.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        
+        // Style table cells
+        const cells = table.getElementsByTagName('td');
+        const headers = table.getElementsByTagName('th');
+        for (let j = 0; j < cells.length; j++) {
+          cells[j].style.border = '1px solid #d1d5db';
+          cells[j].style.padding = '12px';
+        }
+        for (let j = 0; j < headers.length; j++) {
+          headers[j].style.border = '1px solid #d1d5db';
+          headers[j].style.padding = '12px';
+          headers[j].style.fontWeight = 'bold';
+          headers[j].style.textAlign = 'left';
+          headers[j].style.backgroundColor = '#f3f4f6';
+        }
+      }
+      
+      // Insert the processed HTML
+      document.execCommand('insertHTML', false, tempDiv.innerHTML);
+    } else {
+      // If no HTML content, format plain text
+      const paragraphs = text.split('\n').filter(p => p.trim());
+      const formattedText = paragraphs.map(p => `<p style="margin: 0 0 15px 0; line-height: 1.6;">${p}</p>`).join('');
+      document.execCommand('insertHTML', false, formattedText);
+    }
     
     // Update content after paste
     if (editorRef.current) {
