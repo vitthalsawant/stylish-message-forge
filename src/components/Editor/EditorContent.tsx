@@ -6,12 +6,14 @@ interface EditorContentProps {
   content: string;
   onChange: (content: string) => void;
   onSelectionChange: (selection: Selection | null) => void;
+  className?: string;
 }
 
 const EditorContent: React.FC<EditorContentProps> = ({ 
   content, 
   onChange, 
-  onSelectionChange 
+  onSelectionChange,
+  className
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -62,35 +64,35 @@ const EditorContent: React.FC<EditorContentProps> = ({
       const images = tempDiv.getElementsByTagName('img');
       for (let i = 0; i < images.length; i++) {
         const img = images[i];
-        img.style.maxWidth = '100%';
-        img.style.height = 'auto';
-        img.style.borderRadius = '8px';
-        img.style.margin = '10px 0';
+        // img.style.maxWidth = '100%';
+        // img.style.height = 'auto';
+        // img.style.borderRadius = '8px';
+        // img.style.margin = '10px 0';
       }
       
       // Process tables to ensure they're properly styled
       const tables = tempDiv.getElementsByTagName('table');
       for (let i = 0; i < tables.length; i++) {
         const table = tables[i];
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        table.style.borderRadius = '8px';
-        table.style.overflow = 'hidden';
-        table.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        // table.style.width = '100%';
+        // table.style.borderCollapse = 'collapse';
+        // table.style.borderRadius = '8px';
+        // table.style.overflow = 'hidden';
+        // table.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
         
         // Style table cells
         const cells = table.getElementsByTagName('td');
         const headers = table.getElementsByTagName('th');
         for (let j = 0; j < cells.length; j++) {
-          cells[j].style.border = '1px solid #d1d5db';
-          cells[j].style.padding = '12px';
+          // cells[j].style.border = '1px solid #d1d5db';
+          // cells[j].style.padding = '12px';
         }
         for (let j = 0; j < headers.length; j++) {
-          headers[j].style.border = '1px solid #d1d5db';
-          headers[j].style.padding = '12px';
-          headers[j].style.fontWeight = 'bold';
-          headers[j].style.textAlign = 'left';
-          headers[j].style.backgroundColor = '#f3f4f6';
+          // headers[j].style.border = '1px solid #d1d5db';
+          // headers[j].style.padding = '12px';
+          // headers[j].style.fontWeight = 'bold';
+          // headers[j].style.textAlign = 'left';
+          // headers[j].style.backgroundColor = '#f3f4f6';
         }
       }
       
@@ -137,7 +139,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
+                  <div class="resizable-panel" style="position: relative; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
                     <img src="${e.target?.result}" alt="Uploaded image" style="max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
                     <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
                     <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -168,7 +170,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
+                <div class="resizable-panel" style="position: relative; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
                   <img src="${url}" alt="Image from URL" style="max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" onclick="editImageSize(this)" />
                   <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
                   <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -198,7 +200,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 250px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 500px; height: 350px;">
+                  <div class="resizable-panel" style="position: relative; width: 500px; height: 350px;">
                     <video controls style="width: 100%; height: calc(100% - 40px); border-radius: 6px;">
                       <source src="${e.target?.result}" type="${file.type}">
                       Your browser does not support the video tag.
@@ -231,7 +233,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 250px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; width: 500px; height: 350px;">
+                <div class="resizable-panel" style="position: relative; width: 500px; height: 350px;">
                   <div style="width: 100%; height: calc(100% - 40px);">${embedCode}</div>
                   <div contenteditable="true" style="color: #374151; font-size: 14px; text-align: center; position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 4px;">Click to add video caption</div>
                   <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -261,7 +263,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 120px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 200px; height: 150px;">
+                  <div class="resizable-panel" style="position: relative; text-align: center; padding: 10px; width: 200px; height: 150px;">
                     <img src="${e.target?.result}" alt="Uploaded icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
                     <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
                     <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -291,7 +293,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 120px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 200px; height: 150px;">
+                <div class="resizable-panel" style="position: relative; text-align: center; padding: 10px; width: 200px; height: 150px;">
                   <img src="${url}" alt="Icon from URL" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
                   <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
                   <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -321,7 +323,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 250px; height: 200px;">
+                  <div class="resizable-panel" style="position: relative; text-align: center; padding: 10px; width: 250px; height: 200px;">
                     <img src="${e.target?.result}" alt="Uploaded sticker" style="max-width: 150px; max-height: 120px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
                     <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
                     <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -351,7 +353,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 250px; height: 200px;">
+                <div class="resizable-panel" style="position: relative; text-align: center; padding: 10px; width: 250px; height: 200px;">
                   <img src="${url}" alt="Sticker from URL" style="max-width: 150px; max-height: 120px; border-radius: 12px; object-fit: cover; transform: rotate(-2deg); margin: 0 auto; display: block;" />
                   <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
                   <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -381,7 +383,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
             container.innerHTML = `
               <div class="resizable-block-wrapper">
                 <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                  <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 300px; height: 220px;">
+                  <div class="resizable-panel" style="position: relative; text-align: center; padding: 10px; width: 300px; height: 220px;">
                     <img src="${e.target?.result}" alt="Uploaded GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
                     <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
                     <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -413,7 +415,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
           container.innerHTML = `
             <div class="resizable-block-wrapper">
               <div class="resizable-panel-group" style="height: auto; min-height: 180px;">
-                <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; text-align: center; padding: 10px; width: 300px; height: 220px;">
+                <div class="resizable-panel" style="position: relative; text-align: center; padding: 10px; width: 300px; height: 220px;">
                   <img src="${url}" alt="GIF from URL" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
                   <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
                   <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -886,7 +888,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
     <div className="relative">
       <div
         ref={editorRef}
-        className="editor-content p-4 border border-t-0 rounded-b-md min-h-[300px] focus:outline-none focus:ring-1 focus:ring-primary bg-white"
+        className={`editor-content p-4 border border-t-0 rounded-b-md min-h-[300px] focus:outline-none focus:ring-1 focus:ring-primary bg-white ${className}`}
         contentEditable
         onInput={handleInput}
         onKeyDown={handleKeyDown}
@@ -1034,6 +1036,154 @@ const EditorContent: React.FC<EditorContentProps> = ({
           .inline-image-container:hover .resize-handle {
             display: block;
             opacity: 0.8;
+          }
+
+          /* Styles for editor edit mode */
+          .editor-edit-mode-styles .resizable-panel,
+          .editor-edit-mode-styles .draggable-row {
+            border: 2px dashed #d1d5db !important;
+            background-color: #f9fafb !important;
+            border-radius: 8px !important;
+            box-shadow: none !important;
+          }
+
+          .editor-edit-mode-styles .resizable-panel {
+            border-color: #3b82f6 !important;
+            border-style: solid !important;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15) !important;
+          }
+          
+          .editor-edit-mode-styles .image-block,
+          .editor-edit-mode-styles .video-block,
+          .editor-edit-mode-styles .icon-block,
+          .editor-edit-mode-styles .sticker-block,
+          .editor-edit-mode-styles .gif-block,
+          .editor-edit-mode-styles .button-block,
+          .editor-edit-mode-styles .social-block,
+          .editor-edit-mode-styles .html-block,
+          .editor-edit-mode-styles .menu-block,
+          .editor-edit-mode-styles .spacer-block {
+            border: 2px dashed #d1d5db !important;
+            background-color: #f9fafb !important;
+            border-radius: 8px !important;
+            padding: 15px !important; /* Default padding for blocks */
+          }
+
+          .editor-edit-mode-styles .spacer-block {
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #9ca3af !important;
+            cursor: pointer !important;
+          }
+
+          /* Specific overrides for nested elements within blocks */
+          .editor-edit-mode-styles .image-block .upload-area,
+          .editor-edit-mode-styles .video-block .upload-area,
+          .editor-edit-mode-styles .icon-block .upload-area,
+          .editor-edit-mode-styles .sticker-block .upload-area,
+          .editor-edit-mode-styles .gif-block .upload-area {
+            display: block !important;
+          }
+
+          .editor-edit-mode-styles .resizable-panel:hover .resize-handle {
+            opacity: 0.8 !important;
+          }
+
+          .editor-edit-mode-styles .resize-handle:hover {
+            opacity: 1 !important;
+            background: #1d4ed8 !important;
+            transform: scale(1.1) !important;
+          }
+
+          /* Styles for preview mode */
+          .preview-mode .draggable-row,
+          .preview-mode .resizable-panel,
+          .preview-mode .image-block,
+          .preview-mode .video-block,
+          .preview-mode .icon-block,
+          .preview-mode .sticker-block,
+          .preview-mode .gif-block,
+          .preview-mode .button-block,
+          .preview-mode .social-block,
+          .preview-mode .html-block,
+          .preview-mode .menu-block,
+          .preview-mode .spacer-block {
+            border: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+          }
+          
+          .preview-mode .resize-handle {
+            display: none !important;
+          }
+          
+          .preview-mode .image-block .upload-area,
+          .preview-mode .video-block .upload-area,
+          .preview-mode .icon-block .upload-area,
+          .preview-mode .sticker-block .upload-area,
+          .preview-mode .gif-block .upload-area {
+            display: none !important;
+          }
+
+          .preview-mode .spacer-block {
+            border: none !important;
+            background-color: transparent !important;
+            color: transparent !important;
+            cursor: default !important;
+          }
+
+          .preview-mode table,
+          .preview-mode th,
+          .preview-mode td {
+            border: none !important;
+            background-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+          }
+
+          .preview-mode img {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+          }
+
+          .preview-mode .button-block a,
+          .preview-mode .social a {
+            pointer-events: none; /* Disable clicks on buttons/social links in preview */
+          }
+          
+          /* More aggressive reset for all elements within preview mode */
+          .preview-mode *,
+          .preview-mode div,
+          .preview-mode p,
+          .preview-mode h1,
+          .preview-mode h2,
+          .preview-mode h3,
+          .preview-mode h4,
+          .preview-mode h5,
+          .preview-mode h6,
+          .preview-mode ul,
+          .preview-mode ol,
+          .preview-mode li,
+          .preview-mode table,
+          .preview-mode th,
+          .preview-mode td,
+          .preview-mode img,
+          .preview-mode hr { /* Add hr to the aggressive reset */
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+
+          .preview-mode hr {
+            display: none !important; /* Explicitly hide hr in preview */
           }
         `}
       </style>

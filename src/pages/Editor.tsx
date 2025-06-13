@@ -157,7 +157,7 @@ const Editor = () => {
       <div class="draggable-row image-block" style="margin-bottom: 20px;">
         <div class="resizable-block-wrapper">
           <div class="resizable-panel-group" style="height: auto; min-height: 200px;">
-            <div class="resizable-panel" style="position: relative; border: 2px solid #3b82f6; border-radius: 8px; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
+            <div class="resizable-panel" style="position: relative; width: 100%; max-width: 600px; height: auto; min-height: 200px; margin: 0 auto;">
               <img src="${imageUrl}" alt="Uploaded image" style="max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 6px; cursor: pointer;" />
               <div class="resize-handle resize-handle-bottom" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 24px; height: 8px; background: #3b82f6; border-radius: 4px; cursor: ns-resize; opacity: 0; transition: opacity 0.2s;"></div>
               <div class="resize-handle resize-handle-right" style="position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 24px; background: #3b82f6; border-radius: 4px; cursor: ew-resize; opacity: 0; transition: opacity 0.2s;"></div>
@@ -197,7 +197,7 @@ const Editor = () => {
 
   const handleInsertVideoBlock = (videoUrl: string) => {
     const videoBlockHtml = `
-      <div class="draggable-row video-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+      <div class="draggable-row video-block" style="margin-bottom: 20px;">
         <video src="${videoUrl}" controls style="max-width: 100%; max-height: 350px; border-radius: 8px; display: block; margin: 0 auto;"></video>
         <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add video caption</div>
       </div>
@@ -211,7 +211,7 @@ const Editor = () => {
 
   const handleInsertGif = (gifUrl: string) => {
     const gifBlockHtml = `
-      <div class="draggable-row gif-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+      <div class="draggable-row gif-block" style="margin-bottom: 20px;">
         <img src="${gifUrl}" alt="GIF" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover; margin: 0 auto; display: block;" />
         <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add GIF caption</div>
       </div>
@@ -221,7 +221,7 @@ const Editor = () => {
 
   const handleInsertIcon = (iconUrl: string) => {
     const iconBlockHtml = `
-      <div class="draggable-row icon-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+      <div class="draggable-row icon-block" style="margin-bottom: 20px;">
         <img src="${iconUrl}" alt="Icon" style="width: 64px; height: 64px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;" />
         <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit icon label</div>
       </div>
@@ -231,9 +231,9 @@ const Editor = () => {
 
   const handleInsertSticker = (stickerUrl: string) => {
     const stickerBlockHtml = `
-      <div class="draggable-row sticker-block" style="margin-bottom: 20px; text-align: center; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;">
+      <div class="draggable-row sticker-block" style="margin-bottom: 20px;">
         <img src="${stickerUrl}" alt="Sticker" style="max-height: 150px; border-radius: 12px; object-fit: cover; margin: 0 auto; display: block;" />
-        <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to edit sticker caption</div>
+        <div contenteditable="true" style="color: #374151; font-size: 14px; margin-top: 10px;">Click to add sticker caption</div>
       </div>
     `;
     document.execCommand('insertHTML', false, stickerBlockHtml);
@@ -241,7 +241,7 @@ const Editor = () => {
 
   // Add this function for inline image insertion
   const handleInsertInlineImage = (imageUrl: string) => {
-    const imageHtml = `<img src="${imageUrl}" alt="Inline image" style="display:inline-block; vertical-align:middle; margin:4px; max-width:120px; max-height:120px; border-radius:6px; object-fit:contain; cursor:pointer; border:2px solid transparent; transition:border-color 0.2s;" />&nbsp;`;
+    const imageHtml = `<img src="${imageUrl}" alt="Inline image" style="display:inline-block; vertical-align:middle; margin:4px; max-width:120px; max-height:120px; border-radius:6px; object-fit:contain; cursor:pointer;" />&nbsp;`;
     document.execCommand("insertHTML", false, imageHtml);
   };
 
@@ -271,40 +271,40 @@ const Editor = () => {
     
     switch(blockType) {
       case 'title':
-        html = '<div class="draggable-row" style="margin-bottom: 20px;"><h2 contenteditable="true" style="font-size: 28px; font-weight: bold; margin: 0; padding: 15px; border: 2px dashed #d1d5db; background-color: #f9fafb; color: #1f2937; text-align: center; border-radius: 8px;" placeholder="Enter your title here...">Your Amazing Title</h2></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px;"><h2 contenteditable="true" style="font-size: 28px; font-weight: bold; margin: 0; color: #1f2937; text-align: center;" placeholder="Enter your title here...">Your Amazing Title</h2></div>';
         break;
       case 'paragraph':
-        html = '<div class="draggable-row" style="margin-bottom: 20px;"><div contenteditable="true" style="padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; min-height: 100px; line-height: 1.6; border-radius: 8px;" placeholder="Start typing your paragraph here..."><p style="margin: 0 0 15px 0;">This is your first paragraph. Click here to start editing and add your content.</p><p style="margin: 0;">You can add multiple paragraphs by pressing Enter. Each paragraph will be properly formatted with good spacing.</p></div></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px;"><div contenteditable="true" style="padding: 20px; min-height: 100px; line-height: 1.6;" placeholder="Start typing your paragraph here..."><p style="margin: 0 0 15px 0;">This is your first paragraph. Click here to start editing and add your content.</p><p style="margin: 0;">You can add multiple paragraphs by pressing Enter. Each paragraph will be properly formatted with good spacing.</p></div></div>';
         break;
       case 'list':
-        html = '<div class="draggable-row" style="margin-bottom: 20px;"><div style="padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><ul contenteditable="true" style="margin: 0; padding-left: 20px; line-height: 1.8;"><li style="margin-bottom: 8px;">First list item - click to edit</li><li style="margin-bottom: 8px;">Second list item - add your content</li><li style="margin-bottom: 8px;">Third list item - press Enter for new items</li></ul></div></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px;"><div style="padding: 20px;"><ul contenteditable="true" style="margin: 0; padding-left: 20px; line-height: 1.8;"><li style="margin-bottom: 8px;">First list item - click to edit</li><li style="margin-bottom: 8px;">Second list item - add your content</li><li style="margin-bottom: 8px;">Third list item - press Enter for new items</li></ul></div></div>';
         break;
       case 'image-box':
-        html = '<div class="draggable-row" style="margin-bottom: 20px; position: relative; min-height: 300px; background-image: url(\'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop\'); background-size: cover; background-position: center; background-repeat: no-repeat; border: 2px dashed #d1d5db; border-radius: 12px; overflow: hidden;"><div contenteditable="true" style="position: relative; z-index: 2; padding: 30px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); background: rgba(0,0,0,0.4); height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 12px;"><h3 style="margin: 0; font-size: 24px; font-weight: bold;">Click here to add your overlay text</h3></div></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px; position: relative; min-height: 300px; background-image: url(\'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop\'); background-size: cover; background-position: center; background-repeat: no-repeat; overflow: hidden;"><div contenteditable="true" style="position: relative; z-index: 2; padding: 30px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); background: rgba(0,0,0,0.4); height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;"><h3 style="margin: 0; font-size: 24px; font-weight: bold;">Click here to add your overlay text</h3></div></div>';
         break;
       case 'button':
-        html = '<div class="draggable-row button-block" style="text-align: center; margin-bottom: 20px; padding: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><a href="#" contenteditable="true" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'">Click Me - Edit Text & Link</a></div>';
+        html = '<div class="draggable-row button-block" style="text-align: center; margin-bottom: 20px;"><a href="#" contenteditable="true" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'">Click Me - Edit Text & Link</a></div>';
         break;
       case 'table':
-        html = '<div class="draggable-row" style="margin-bottom: 20px; padding: 15px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><table contenteditable="true" style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><thead><tr style="background-color: #f3f4f6;"><th style="border: 1px solid #d1d5db; padding: 12px; font-weight: bold; text-align: left;">Header 1</th><th style="border: 1px solid #d1d5db; padding: 12px; font-weight: bold; text-align: left;">Header 2</th><th style="border: 1px solid #d1d5db; padding: 12px; font-weight: bold; text-align: left;">Header 3</th></tr></thead><tbody><tr><td style="border: 1px solid #d1d5db; padding: 12px;">Cell 1-1</td><td style="border: 1px solid #d1d5db; padding: 12px;">Cell 1-2</td><td style="border: 1px solid #d1d5db; padding: 12px;">Cell 1-3</td></tr><tr style="background-color: #f9fafb;"><td style="border: 1px solid #d1d5db; padding: 12px;">Cell 2-1</td><td style="border: 1px solid #d1d5db; padding: 12px;">Cell 2-2</td><td style="border: 1px solid #d1d5db; padding: 12px;">Cell 2-3</td></tr></tbody></table></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px;"><table contenteditable="true" style="width: 100%; border-collapse: collapse; overflow: hidden;"><thead><tr style="background-color: #f3f4f6;"><th style="padding: 12px; font-weight: bold; text-align: left;">Header 1</th><th style="padding: 12px; font-weight: bold; text-align: left;">Header 2</th><th style="padding: 12px; font-weight: bold; text-align: left;">Header 3</th></tr></thead><tbody><tr><td style="padding: 12px;">Cell 1-1</td><td style="padding: 12px;">Cell 1-2</td><td style="padding: 12px;">Cell 1-3</td></tr><tr style="background-color: #f9fafb;"><td style="padding: 12px;">Cell 2-1</td><td style="padding: 12px;">Cell 2-2</td><td style="padding: 12px;">Cell 2-3</td></tr></tbody></table></div>';
         break;
       case 'divider':
-        html = '<div class="draggable-row" style="margin: 30px 0; padding: 10px 0;"><hr style="border: 0; height: 2px; background: linear-gradient(90deg, transparent, #e5e7eb, transparent); margin: 0;" /><div style="text-align: center; margin-top: 10px;"><span contenteditable="true" style="background: #f3f4f6; padding: 5px 15px; border-radius: 20px; font-size: 12px; color: #6b7280;">Section Break</span></div></div>';
+        html = '<div class="draggable-row" style="margin: 30px 0;"><hr style="border: 0; height: 2px; background: transparent; margin: 0;" /><div style="text-align: center; margin-top: 10px;"><span contenteditable="true" style="background: transparent; font-size: 12px; color: #6b7280;">Section Break</span></div></div>';
         break;
       case 'spacer':
-        html = '<div class="draggable-row spacer-block" style="height: 60px; margin-bottom: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px; cursor: pointer;" onclick="this.style.height = prompt(\'Enter height in pixels:\', \'60\') + \'px\'">Click to adjust spacing (60px)</div>';
+        html = '<div class="draggable-row spacer-block" style="height: 60px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px; cursor: pointer;" onclick="this.style.height = prompt(\'Enter height in pixels:\', \'60\') + \'px\'">Click to adjust spacing (60px)</div>';
         break;
       case 'social':
-        html = '<div class="draggable-row" style="text-align: center; margin-bottom: 20px; padding: 25px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="margin-bottom: 15px;"><span contenteditable="true" style="font-size: 18px; font-weight: bold; color: #374151;">Follow Us On Social Media!</span></div><div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;"><a href="https://facebook.com" style="display: inline-block; width: 50px; height: 50px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">📘</a><a href="https://twitter.com" style="display: inline-block; width: 50px; height: 50px; background: #1da1f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">🐦</a><a href="https://instagram.com" style="display: inline-block; width: 50px; height: 50px; background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">📷</a><a href="https://linkedin.com" style="display: inline-block; width: 50px; height: 50px; background: #0077b5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">💼</a></div></div>';
+        html = '<div class="draggable-row" style="text-align: center; margin-bottom: 20px;"><div style="margin-bottom: 15px;"><span contenteditable="true" style="font-size: 18px; font-weight: bold; color: #374151;">Follow Us On Social Media!</span></div><div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;"><a href="https://facebook.com" style="display: inline-block; width: 50px; height: 50px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">📘</a><a href="https://twitter.com" style="display: inline-block; width: 50px; height: 50px; background: #1da1f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">🐦</a><a href="https://instagram.com" style="display: inline-block; width: 50px; height: 50px; background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">📷</a><a href="https://linkedin.com" style="display: inline-block; width: 50px; height: 50px; background: #0077b5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">💼</a></div></div>';
         break;
       case 'html':
-        html = '<div class="draggable-row" style="margin-bottom: 20px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><div style="background: #1f2937; color: #10b981; padding: 15px; border-radius: 8px 8px 0 0; font-family: monospace; font-size: 12px;">HTML Code Block</div><div contenteditable="true" style="padding: 20px; font-family: \'Courier New\', monospace; background: #f8fafc; border-radius: 0 0 8px 8px; min-height: 100px; font-size: 14px; line-height: 1.6;">&lt;div style="text-align: center; padding: 20px;"&gt;<br>&nbsp;&nbsp;&lt;h3&gt;Custom HTML Content&lt;/h3&gt;<br>&nbsp;&nbsp;&lt;p&gt;Edit this HTML code as needed&lt;/p&gt;<br>&lt;/div&gt;</div></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px;"><div style="color: #10b981; padding: 15px; font-family: monospace; font-size: 12px;">HTML Code Block</div><div contenteditable="true" style="font-family: \'Courier New\', monospace; min-height: 100px; font-size: 14px; line-height: 1.6;">&lt;div style="text-align: center; padding: 20px;"&gt;<br>&nbsp;&nbsp;&lt;h3&gt;Custom HTML Content&lt;/h3&gt;<br>&nbsp;&nbsp;&lt;p&gt;Edit this HTML code as needed&lt;/p&gt;<br>&lt;/div&gt;</div></div>';
         break;
       case 'menu':
-        html = '<div class="draggable-row" style="margin-bottom: 20px; padding: 15px; border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px;"><nav style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div contenteditable="true" style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #1f2937;">Navigation Menu</div><ul contenteditable="true" style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 25px;"><li><a href="#home" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Home</a></li><li><a href="#about" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">About</a></li><li><a href="#services" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Services</a></li><li><a href="#contact" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Contact</a></li></ul></nav></div>';
+        html = '<div class="draggable-row" style="margin-bottom: 20px;"><nav><div contenteditable="true" style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #1f2937;">Navigation Menu</div><ul contenteditable="true" style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 25px;"><li><a href="#home" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Home</a></li><li><a href="#about" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">About</a></li><li><a href="#services" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Services</a></li><li><a href="#contact" style="color: #3b82f6; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'transparent\'">Contact</a></li></ul></nav></div>';
         break;
       default:
-        html = `<div class="draggable-row" style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>[${blockType} block - click to edit]</p></div>`;
+        html = `<div class="draggable-row" style="margin-bottom: 20px;"><p>[${blockType} block - click to edit]</p></div>`;
     }
     
     document.execCommand("insertHTML", false, html);
@@ -320,22 +320,22 @@ const Editor = () => {
     
     switch(layoutId) {
       case 'single-column':
-        layoutHtml = '<div style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>Single column content area. Click to edit.</p></div>';
+        layoutHtml = '<div style="margin-bottom: 20px;"><p>Single column content area. Click to edit.</p></div>';
         break;
       case 'two-column-left':
-        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 30%; margin-right: 10px;"><p>Left column</p></div><div style="width: 70%;"><p>Right column</p></div></div>';
         break;
       case 'two-column-right':
-        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 70%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 30%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 70%; margin-right: 10px;"><p>Left column</p></div><div style="width: 30%;"><p>Right column</p></div></div>';
         break;
       case 'two-column-equal':
-        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 50%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 50%; margin-right: 10px;"><p>Left column</p></div><div style="width: 50%;"><p>Right column</p></div></div>';
         break;
       case 'three-column':
-        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Left column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-right: 10px;"><p>Middle column</p></div><div style="width: 33.33%; padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db;"><p>Right column</p></div></div>';
+        layoutHtml = '<div style="display: flex; margin-bottom: 20px;"><div style="width: 33.33%; margin-right: 10px;"><p>Left column</p></div><div style="width: 33.33%; margin-right: 10px;"><p>Middle column</p></div><div style="width: 33.33%;"><p>Right column</p></div></div>';
         break;
       default:
-        layoutHtml = '<div style="padding: 15px; background-color: #f9fafb; border: 1px dashed #d1d5db; margin-bottom: 20px;"><p>Content area. Click to edit.</p></div>';
+        layoutHtml = '<div style="margin-bottom: 20px;"><p>Content area. Click to edit.</p></div>';
     }
     
     document.execCommand("insertHTML", false, layoutHtml);
@@ -562,6 +562,7 @@ const Editor = () => {
                         content={content}
                         onChange={setContent}
                         onSelectionChange={setSelection}
+                        className={activeTab === 'edit' ? 'editor-edit-mode-styles' : ''}
                       />
                     </div>
 
@@ -572,7 +573,7 @@ const Editor = () => {
                     <Card>
                       <CardContent className="pt-6">
                         <div 
-                          className={`preview-container p-6 bg-white border rounded-lg template-${templateColor}`}
+                          className={`preview-container p-6 template-${templateColor} ${activeTab === 'preview' ? 'preview-mode' : 'bg-white border rounded-lg'}`}
                           style={{
                             maxWidth: `${emailSettings.contentWidth}px`,
                             margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
@@ -585,12 +586,20 @@ const Editor = () => {
                           <div 
                             className="content-preview mb-8"
                             dangerouslySetInnerHTML={{ __html: content }}
-                            style={{ color: 'inherit' }}
+                            style={{ 
+                              color: 'inherit',
+                              userSelect: 'none',
+                              pointerEvents: 'none'
+                            }}
                           />
                           <hr className="my-6" />
                           <div 
                             className="footer-preview text-sm text-gray-600"
                             dangerouslySetInnerHTML={{ __html: footerContent }}
+                            style={{ 
+                              userSelect: 'none',
+                              pointerEvents: 'none'
+                            }}
                           />
                         </div>
                       </CardContent>
@@ -636,7 +645,7 @@ const Editor = () => {
           </DialogHeader>
           <div 
             ref={previewRef}
-            className={`preview-container p-6 bg-white border rounded-lg template-${templateColor}`}
+            className={`preview-container p-6 template-${templateColor} preview-mode`}
             style={{
               maxWidth: `${emailSettings.contentWidth}px`,
               margin: emailSettings.alignment === 'center' ? '0 auto' : '0',
@@ -649,12 +658,20 @@ const Editor = () => {
             <div
               className="content-preview mb-8"
               dangerouslySetInnerHTML={{ __html: content }}
-              style={{ color: 'inherit' }}
+              style={{ 
+                color: 'inherit',
+                userSelect: 'none',
+                pointerEvents: 'none'
+              }}
             />
             <hr className="my-6" />
             <div
               className="footer-preview text-sm text-gray-600"
               dangerouslySetInnerHTML={{ __html: footerContent }}
+              style={{ 
+                userSelect: 'none',
+                pointerEvents: 'none'
+              }}
             />
           </div>
           <div className="flex justify-end gap-2 mt-4">
